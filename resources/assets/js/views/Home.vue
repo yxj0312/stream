@@ -9,7 +9,9 @@
                         </p>
 
                         <p>
-                            {{ postedOn(status) }}
+                            <!-- {{ postedOn(status) }} -->
+                            <!-- use Vue Filter instead -->
+                            {{ status.created_at | ago | capitalize }}
                         </p>
                     </div>
 
@@ -28,6 +30,16 @@
         data() {
             return {
                 statuses: []
+            }
+        },
+
+        filters: {
+            ago(date) {
+                return moment(date).fromNow();
+            },
+
+            capitalize(value) {
+                return value.toUpperCase();
             }
         },
 
