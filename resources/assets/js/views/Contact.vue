@@ -7,6 +7,17 @@
 
                     <div class="card-body">
                         I'm an example component.
+                        <example :items="['one','two','three']">
+                            <!-- "props" is just a temporary variable(u can also call it data if u want) -->
+                            <template  slot="menu-item" slot-scope="props">
+                            <!-- U can also do like:
+                            <template slot-scope="{ bar }">
+                                <h2 v-text="bar"></h2> -->
+                                <div>
+                                    <em v-text="props.item"></em>
+                                </div>
+                            </template>
+                        </example>
                     </div>
                 </div>
             </div>
@@ -15,9 +26,8 @@
 </template>
 
 <script>
+    import example from "./Example.vue";
     export default {
-        mounted() {
-            console.log('Component mounted.')
-        }
+        components: { example }
     }
 </script>
