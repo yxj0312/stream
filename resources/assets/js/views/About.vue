@@ -1,12 +1,18 @@
 <template>
     <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="card card-default">
-                    <div class="card-header">The About Page</div>
+        <div class="columns">
+            <div class="column">
+                <div class="message">
+                    <div class="message-header">Carousel</div>
 
-                    <div class="card-body">
-                        I'm an example component.
+                    <div class="message-body">
+                       <carousel :auto-play="true">
+                            <img src="https://placeimg.com/640/480/any">
+                            <img src="https://placeimg.com/640/480/any?2">
+                            <img src="https://placeimg.com/640/480/any?3">
+                            <img src="https://placeimg.com/640/480/any?4">
+                            <img src="https://placeimg.com/640/480/any?5">
+                       </carousel>
                     </div>
                 </div>
             </div>
@@ -15,9 +21,8 @@
 </template>
 
 <script>
+    import carousel from '../components/Carousel.vue'
     export default {
-        mounted() {
-            console.log('Component mounted.')
-        }
+       components: { carousel }
     }
 </script>
