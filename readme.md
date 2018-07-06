@@ -17,3 +17,7 @@ If you'd like to jump on board, let me show you, step by step, exactly what you 
 - [Ep 30 -  TestingVue](https://github.com/yxj0312/TestingVue/commit/15274c6d3f370720c115c07f32acd888e4523614)
 - [Ep 31 - Homework - Favorite.vue](https://github.com/yxj0312/Homework/blob/master/resources/assets/js/components/Favorite.vue)
 - [Ep 32 - Homework - collection.js](https://github.com/yxj0312/Homework/blob/master/resources/assets/js/mixins/collection.js)
+- [Ep 33 - Stream - Ep 33 - Scoped Slots](https://github.com/yxj0312/stream/commit/c048051a55f0c759687d98ceaeb2af18f8d2a8d4)
+- [Ep 34 - Stream - Ep 34 - Wrap Existing Tools into Components](https://github.com/yxj0312/stream/commit/8684e47a782438b5d00e808f8c37c06e6e69607d)
+- [Ep 35](https://laracasts.com/series/learn-vue-2-step-by-step/episodes/35) 
+ 
