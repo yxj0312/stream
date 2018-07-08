@@ -15,6 +15,11 @@ let routes = [
         path: '/contact',
         component: require('./views/Contact')
     },
+
+    {
+        path: '/series',
+        component: require('./views/Series')
+    },
 ];
 
 export default new VueRouter({

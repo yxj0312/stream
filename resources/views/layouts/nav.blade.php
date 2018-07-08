@@ -1,4 +1,4 @@
-<nav class="tabs is-boxed">
+<nav class="tabs is-boxed" style="margin-bottom:0">
     <div class="container">
         <ul>
             <router-link tag="li" to="/" exact>
@@ -13,9 +13,9 @@
                 <a>Contact</a>
             </router-link>
 
-            {{-- <router-link tag="li" to="/example">
-                <a>Example</a>
-            </router-link> --}}
+            <series-dropdown></series-dropdown>
         </ul>
     </div>
 </nav>
+
+<portal-target name="nav-after"></portal-target>
