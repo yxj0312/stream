@@ -1,9 +1,12 @@
 import './bootstrap';
 import router from './routes';
-import PortalVue from 'portal-vue'
+import VModal from 'vue-js-modal';
+import PortalVue from 'portal-vue';
 
 Vue.use(PortalVue)
+Vue.use(VModal)
 Vue.component("series-dropdown", require("./components/SeriesDropdown.vue"));
+Vue.component("support-button", require("./components/SupportButton.vue"));
 
 
 new Vue({

@@ -14,6 +14,7 @@
             </router-link>
 
             <series-dropdown></series-dropdown>
+            <li><support-button></support-button></li>
         </ul>
     </div>
 </nav>
