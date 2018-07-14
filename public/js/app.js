@@ -40342,7 +40342,7 @@ var render = function() {
               [
                 _c("span", { staticClass: "icon" }, [
                   _c("i", {
-                    staticClass: "fa fa-angle-down",
+                    staticClass: "fas fa-ambulance",
                     attrs: { "aria-hidden": "true" }
                   })
                 ])
