@@ -40277,6 +40277,64 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: [],
@@ -40284,13 +40342,42 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     components: {},
 
     data: function data() {
-        return {};
+        return {
+            message: {},
+            errors: {},
+            submitted: false
+        };
     },
 
 
     computed: {},
 
-    methods: {}
+    methods: {
+        cancel: function cancel() {
+            this.$modal.hide('contact-support-modal');
+
+            this.resetForm();
+        },
+        contactSupport: function contactSupport() {
+            var _this = this;
+
+            this.submitted = true;
+
+            axios.post('/contact', this.message).then(function () {
+                _this.$modal.hide('contact-support-modal');
+
+                _this.resetForm();
+
+                // show an alert swal()
+            }).catch(function (errors) {
+                _this.errors = errors.response.data.errors;
+            });
+        },
+        resetForm: function resetForm() {
+            this.message = {};
+            this.submitted = false;
+        }
+    }
 });
 
 /***/ }),
@@ -40330,58 +40417,223 @@ var render = function() {
         [
           _c("header", { staticClass: "card-header" }, [
             _c("h1", { staticClass: "card-header-title" }, [
-              _vm._v("\n            Hava a Question?\n        ")
-            ]),
-            _vm._v(" "),
-            _c(
-              "a",
-              {
-                staticClass: "card-header-icon",
-                attrs: { href: "#", "aria-label": "more options" }
-              },
-              [
-                _c("span", { staticClass: "icon" }, [
-                  _c("i", {
-                    staticClass: "fas fa-ambulance",
-                    attrs: { "aria-hidden": "true" }
-                  })
+              _vm._v("\n                Hava a Question?\n            ")
+            ])
+          ]),
+          _vm._v(" "),
+          _c(
+            "form",
+            {
+              attrs: { autocomplete: "off" },
+              on: {
+                submit: function($event) {
+                  $event.preventDefault()
+                  return _vm.contactSupport($event)
+                },
+                keydown: function($event) {
+                  _vm.submitted = false
+                }
+              }
+            },
+            [
+              _c("div", { staticClass: "card-content" }, [
+                _c("div", { staticClass: "field" }, [
+                  _c("div", { staticClass: "control" }, [
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.message.name,
+                          expression: "message.name"
+                        }
+                      ],
+                      staticClass: "input",
+                      attrs: {
+                        type: "text",
+                        name: "name",
+                        id: "name",
+                        placeholder: "What's your name?",
+                        required: ""
+                      },
+                      domProps: { value: _vm.message.name },
+                      on: {
+                        keydown: function($event) {
+                          delete _vm.errors.name
+                        },
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(_vm.message, "name", $event.target.value)
+                        }
+                      }
+                    }),
+                    _vm._v(" "),
+                    _vm.errors.name
+                      ? _c("span", {
+                          domProps: { textContent: _vm._s(_vm.errors.name[0]) }
+                        })
+                      : _vm._e()
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "field" }, [
+                  _c("div", { staticClass: "control" }, [
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.message.email,
+                          expression: "message.email"
+                        }
+                      ],
+                      staticClass: "input",
+                      attrs: {
+                        type: "email",
+                        name: "email",
+                        id: "email",
+                        placeholder:
+                          "Which email address should we repsond to?",
+                        required: ""
+                      },
+                      domProps: { value: _vm.message.email },
+                      on: {
+                        keydown: function($event) {
+                          delete _vm.errors.email
+                        },
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(_vm.message, "email", $event.target.value)
+                        }
+                      }
+                    }),
+                    _vm._v(" "),
+                    _vm.errors.email
+                      ? _c("span", {
+                          domProps: { textContent: _vm._s(_vm.errors.email[0]) }
+                        })
+                      : _vm._e()
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "field" }, [
+                  _c("div", { staticClass: "control" }, [
+                    _c("textarea", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.message.question,
+                          expression: "message.question"
+                        }
+                      ],
+                      staticClass: "textarea",
+                      attrs: {
+                        name: "question",
+                        id: "body",
+                        "data-autosize": "",
+                        required: "",
+                        rows: "10",
+                        placeholder: "What's your question"
+                      },
+                      domProps: { value: _vm.message.question },
+                      on: {
+                        keydown: function($event) {
+                          delete _vm.errors.question
+                        },
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(_vm.message, "question", $event.target.value)
+                        }
+                      }
+                    }),
+                    _vm._v(" "),
+                    _vm.errors.question
+                      ? _c("span", {
+                          domProps: {
+                            textContent: _vm._s(_vm.errors.question[0])
+                          }
+                        })
+                      : _vm._e()
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "field" }, [
+                  _c("div", { staticClass: "control" }, [
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.message.verification,
+                          expression: "message.verification"
+                        }
+                      ],
+                      staticClass: "input",
+                      attrs: {
+                        type: "text",
+                        name: "verification",
+                        id: "verification",
+                        placeholder: "What is 1 + 4?",
+                        required: ""
+                      },
+                      domProps: { value: _vm.message.verification },
+                      on: {
+                        keydown: function($event) {
+                          delete _vm.errors.verification
+                        },
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(
+                            _vm.message,
+                            "verification",
+                            $event.target.value
+                          )
+                        }
+                      }
+                    }),
+                    _vm._v(" "),
+                    _vm.errors.verification
+                      ? _c("span", {
+                          domProps: {
+                            textContent: _vm._s(_vm.errors.verification[0])
+                          }
+                        })
+                      : _vm._e()
+                  ])
                 ])
-              ]
-            )
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "card-content" }, [
-            _c("div", { staticClass: "content" }, [
-              _vm._v(
-                "\n        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nec iaculis mauris.\n        "
-              ),
-              _c("a", { attrs: { href: "#" } }, [_vm._v("@bulmaio")]),
-              _vm._v(". "),
-              _c("a", { attrs: { href: "#" } }, [_vm._v("#css")]),
+              ]),
               _vm._v(" "),
-              _c("a", { attrs: { href: "#" } }, [_vm._v("#responsive")]),
-              _vm._v(" "),
-              _c("br"),
-              _vm._v(" "),
-              _c("time", { attrs: { datetime: "2016-1-1" } }, [
-                _vm._v("11:09 PM - 1 Jan 2016")
+              _c("footer", { staticClass: "card-footer" }, [
+                _c(
+                  "button",
+                  {
+                    staticClass: "card-footer-item button is-dark",
+                    attrs: { type: "button" },
+                    on: { click: _vm.cancel }
+                  },
+                  [_vm._v("Cancel")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "button",
+                  {
+                    staticClass: "card-footer-item button is-primary",
+                    attrs: { type: "submit", disabled: _vm.submitted }
+                  },
+                  [_vm._v("Send")]
+                )
               ])
-            ])
-          ]),
-          _vm._v(" "),
-          _c("footer", { staticClass: "card-footer" }, [
-            _c("a", { staticClass: "card-footer-item", attrs: { href: "#" } }, [
-              _vm._v("Save")
-            ]),
-            _vm._v(" "),
-            _c("a", { staticClass: "card-footer-item", attrs: { href: "#" } }, [
-              _vm._v("Edit")
-            ]),
-            _vm._v(" "),
-            _c("a", { staticClass: "card-footer-item", attrs: { href: "#" } }, [
-              _vm._v("Delete")
-            ])
-          ])
+            ]
+          )
         ]
       )
     ],

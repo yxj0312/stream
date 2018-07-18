@@ -21,3 +21,5 @@ Route::get('/', function () {
 
 Route::get('/statuses','StatusesController@index');
 Route::post('/statuses','StatusesController@store');
+
+Route::post('/contact','ContactController@store');
