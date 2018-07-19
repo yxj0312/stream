@@ -22,4 +22,6 @@ If you'd like to jump on board, let me show you, step by step, exactly what you 
 - [Ep 35](https://laracasts.com/series/learn-vue-2-step-by-step/episodes/35)
 - [Ep 36](https://laracasts.com/series/learn-vue-2-step-by-step/episodes/36)
 - Ep 38 - Vue Portal: slim, unique name
+- Ep 40: two ways Reusability: Accordion Collection and accordion single component
+
  
