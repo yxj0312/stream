@@ -1,6 +1,5 @@
 import './bootstrap';
 import router from './routes';
-// import breadcrumb from './breadcrumb';
 import VModal from 'vue-js-modal';
 import PortalVue from 'portal-vue';
 
@@ -15,5 +14,4 @@ new Vue({
     el: '#app',
 
     router,
-    // breadcrumb
 });

@@ -32973,7 +32973,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_portal_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_portal_vue__);
 
 
-// import breadcrumb from './breadcrumb';
 
 
 
@@ -32987,7 +32986,6 @@ new Vue({
     el: '#app',
 
     router: __WEBPACK_IMPORTED_MODULE_1__routes__["a" /* default */]
-    // breadcrumb
 });
 
 /***/ }),
