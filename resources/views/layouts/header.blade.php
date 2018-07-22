@@ -55,3 +55,5 @@
     @include('layouts.nav')
   </div>
 </section>
+
+<breadcrumb></breadcrumb>
