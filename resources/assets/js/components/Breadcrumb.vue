@@ -38,7 +38,6 @@
             window.addEventListener(
                 'scroll',
                 throttle(function(){
-                    console.log('I was called');
                     if (window.scrollY >= originalOffsetTop) {
                         bar.classList.add(
                             'navbar',

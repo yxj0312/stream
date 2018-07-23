@@ -17,6 +17,7 @@
     "eslint": "^5.2.0",
     "eslint-config-google": "^0.9.1",
     "eslint-config-myconfig": "^0.2.0",
+    "eslint-plugin-vue": "^4.7.0",
     "flickity": "^2.1.2",
     "laravel-mix": "^2.0",
     "tailwindcss": "^0.6.1",

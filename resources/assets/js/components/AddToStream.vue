@@ -29,6 +29,7 @@
 
         data() {
             return {
+                // eslint-disable-next-line
                 form: new Form({ body:''}) 
             }
         },
