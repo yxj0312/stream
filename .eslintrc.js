@@ -11,6 +11,7 @@ module.exports = {
     globals: {
         "axios": false,
         "flash": false,
-        "Vue": false
+        "Vue": false,
+        "require":false
     }
 };

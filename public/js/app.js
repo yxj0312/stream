@@ -40711,46 +40711,30 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-    props: [],
-
-    components: {},
-
-    data: function data() {
-        return {};
-    },
-
-
-    computed: {},
-
     mounted: function mounted() {
         // can only get this refs value after rendered, which means, created() can not get this value
-        var bar = this.$refs['banner'];
-        var originalOffsetTop = this.$refs['banner'].offsetTop;
+        var el = this.$el;
+        var originalOffsetTop = this.$el.offsetTop;
 
         window.addEventListener('scroll', Object(__WEBPACK_IMPORTED_MODULE_0_lodash__["throttle"])(function () {
-            if (window.scrollY >= originalOffsetTop) {
-                bar.classList.add('navbar', 'is-fixed-top');
-            } else {
-                bar.classList.remove('navbar', 'is-fixed-top');
-            }
+            el.classList[window.scrollY >= originalOffsetTop ? 'add' : 'remove']('navbar', 'is-fixed-top');
+            // if (window.scrollY >= originalOffsetTop) {
+            //     el.classList.add(
+            //         'navbar',
+            //         'is-fixed-top'
+            //     ) 
+            // } else {
+            // el.classList.remove(
+            //         'navbar',
+            //         'is-fixed-top'
+            //     );
+            // }
         }, 300));
-    },
-
-
-    methods: {}
+    }
 });
 
 /***/ }),
@@ -57874,40 +57858,9 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "nav",
-    {
-      ref: "banner",
-      staticClass: "breadcrumb is-right",
-      attrs: { "aria-label": "breadcrumbs" }
-    },
-    [_vm._m(0)]
-  )
+  return _c("div", [_vm._t("default")], 2)
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "container" }, [
-      _c("ul", [
-        _c("li", [_c("a", { attrs: { href: "#" } }, [_vm._v("Bulma")])]),
-        _vm._v(" "),
-        _c("li", [
-          _c("a", { attrs: { href: "#" } }, [_vm._v("Documentation")])
-        ]),
-        _vm._v(" "),
-        _c("li", [_c("a", { attrs: { href: "#" } }, [_vm._v("Components")])]),
-        _vm._v(" "),
-        _c("li", { staticClass: "is-active" }, [
-          _c("a", { attrs: { href: "#", "aria-current": "page" } }, [
-            _vm._v("Breadcrumb")
-          ])
-        ])
-      ])
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
