@@ -33012,6 +33012,17 @@ Vue.component("series-dropdown", __webpack_require__(214));
 Vue.component("support-button", __webpack_require__(217));
 Vue.component("breadcrumb", __webpack_require__(220));
 
+Vue.directive('tooltip', {
+    // For directive, we can hook to the bind method, and that gonna give us the element, that we are binding to.
+    bind: function bind(elem, bindings) {
+        console.log(bindings);
+        new __WEBPACK_IMPORTED_MODULE_4_tooltip_js__["a" /* default */](elem, {
+            placement: bindings.arg, // or bottom, left, right, and variations
+            title: bindings.value
+        });
+    }
+});
+
 new Vue({
     el: '#app',
 
@@ -38438,6 +38449,19 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: [],
@@ -38462,41 +38486,74 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
+  return _c("div", { staticClass: "container has-text-centered" }, [
+    _c("h3", [_vm._v("Option #1")]),
+    _vm._v(" "),
+    _vm._m(0),
+    _vm._v(" "),
+    _vm._m(1),
+    _vm._v(" "),
+    _c("hr"),
+    _vm._v(" "),
+    _c("h3", [_vm._v("Option #2")]),
+    _vm._v(" "),
+    _c("p", [
+      _vm._v("\r\n        Hello there, "),
+      _c(
+        "span",
+        {
+          directives: [
+            {
+              name: "tooltip",
+              rawName: "v-tooltip:top",
+              value: "Here is another way to make a tooltips.",
+              expression: "'Here is another way to make a tooltips.'",
+              arg: "top"
+            }
+          ]
+        },
+        [_vm._v("hover over me")]
+      )
+    ]),
+    _vm._v(" "),
+    _c("hr")
+  ])
 }
 var staticRenderFns = [
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "container has-text-centered" }, [
-      _c("p", [
-        _vm._v("\r\n        Hello there, "),
-        _c(
-          "span",
-          {
-            attrs: {
-              "data-tooltip": "I am a tooltip",
-              "data-tooltip-placement": "left"
-            }
-          },
-          [_vm._v("hover over me")]
-        )
-      ]),
-      _vm._v(" "),
-      _c("p", [
-        _vm._v("\r\n        Hello there again, "),
-        _c(
-          "span",
-          {
-            attrs: {
-              "data-tooltip": "So we meet again",
-              "data-tooltip-placement": "bottom"
-            }
-          },
-          [_vm._v("hover over me again")]
-        )
-      ])
+    return _c("p", [
+      _vm._v("\r\n        Hello there, "),
+      _c(
+        "span",
+        {
+          attrs: {
+            "data-tooltip": "I am a tooltip",
+            "data-tooltip-placement": "left"
+          }
+        },
+        [_vm._v("hover over me")]
+      )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("p", [
+      _vm._v("\r\n        Hello there again, "),
+      _c(
+        "span",
+        {
+          attrs: {
+            "data-tooltip": "So we meet again",
+            "data-tooltip-placement": "bottom"
+          }
+        },
+        [_vm._v("hover over me again")]
+      )
     ])
   }
 ]

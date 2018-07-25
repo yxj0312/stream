@@ -10,6 +10,17 @@ Vue.component("series-dropdown", require("./components/SeriesDropdown.vue"));
 Vue.component("support-button", require("./components/SupportButton.vue"));
 Vue.component("breadcrumb", require("./components/Breadcrumb.vue"))
 
+Vue.directive('tooltip', {
+    // For directive, we can hook to the bind method, and that gonna give us the element, that we are binding to.
+    bind(elem,bindings) {
+        console.log(bindings);
+        new Tooltip(elem, {
+            placement: bindings.arg, // or bottom, left, right, and variations
+            title:  bindings.value
+        });
+    }
+})
+
 
 new Vue({
     el: '#app',
