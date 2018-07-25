@@ -19,8 +19,8 @@ new Vue({
     mounted() {
         document.querySelectorAll('[data-tooltip]').forEach(elem => {
             new Tooltip(elem, {
-                placement: 'top', // or bottom, left, right, and variations
-                title: "Hardcode the tooltips"
+                placement: elem.dataset.tooltipPlacement || 'top', // or bottom, left, right, and variations
+                title: elem.dataset.tooltip
             });
         });
     },
