@@ -33011,11 +33011,11 @@ Vue.use(__WEBPACK_IMPORTED_MODULE_2_vue_js_modal___default.a);
 Vue.component("series-dropdown", __webpack_require__(214));
 Vue.component("support-button", __webpack_require__(217));
 Vue.component("breadcrumb", __webpack_require__(220));
+Vue.component("tooltip", __webpack_require__(230));
 
 Vue.directive('tooltip', {
     // For directive, we can hook to the bind method, and that gonna give us the element, that we are binding to.
     bind: function bind(elem, bindings) {
-        console.log(bindings);
         new __WEBPACK_IMPORTED_MODULE_4_tooltip_js__["a" /* default */](elem, {
             placement: bindings.arg, // or bottom, left, right, and variations
             title: bindings.value
@@ -38462,21 +38462,22 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
-/* harmony default export */ __webpack_exports__["default"] = ({
-    props: [],
-
-    components: {},
-
-    data: function data() {
-        return {};
-    },
-
-
-    computed: {},
-
-    methods: {}
-});
+/* harmony default export */ __webpack_exports__["default"] = ({});
 
 /***/ }),
 /* 209 */
@@ -38486,38 +38487,67 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "container has-text-centered" }, [
-    _c("h3", [_vm._v("Option #1")]),
-    _vm._v(" "),
-    _vm._m(0),
-    _vm._v(" "),
-    _vm._m(1),
-    _vm._v(" "),
-    _c("hr"),
-    _vm._v(" "),
-    _c("h3", [_vm._v("Option #2")]),
-    _vm._v(" "),
-    _c("p", [
-      _vm._v("\r\n        Hello there, "),
+  return _c(
+    "div",
+    { staticClass: "container has-text-centered" },
+    [
+      _c("h3", [_vm._v("Option #1")]),
+      _vm._v(" "),
+      _vm._m(0),
+      _vm._v(" "),
+      _vm._m(1),
+      _vm._v(" "),
+      _c("hr"),
+      _vm._v(" "),
+      _c("h3", [_vm._v("Option #2")]),
+      _vm._v(" "),
+      _c("p", [
+        _vm._v("\r\n        Hello there, "),
+        _c(
+          "span",
+          {
+            directives: [
+              {
+                name: "tooltip",
+                rawName: "v-tooltip:top",
+                value: "Here is another way to make a tooltips.",
+                expression: "'Here is another way to make a tooltips.'",
+                arg: "top"
+              }
+            ]
+          },
+          [_vm._v("hover over me")]
+        )
+      ]),
+      _vm._v(" "),
+      _c("hr"),
+      _vm._v(" "),
+      _c("h3", [_vm._v("Option #3")]),
+      _vm._v(" "),
+      _vm._m(2),
+      _vm._v(" "),
       _c(
-        "span",
+        "tooltip",
         {
-          directives: [
-            {
-              name: "tooltip",
-              rawName: "v-tooltip:top",
-              value: "Here is another way to make a tooltips.",
-              expression: "'Here is another way to make a tooltips.'",
-              arg: "top"
-            }
-          ]
+          attrs: {
+            name: "our-products-tooltip",
+            placement: "top",
+            offset: "0, 20"
+          }
         },
-        [_vm._v("hover over me")]
+        [
+          _c("h1", [_vm._v("Our Products")]),
+          _vm._v(" "),
+          _c("p", [
+            _vm._v(
+              "\r\n            Lorem ipsum dolor sit amet, consetetur sadipscing elitr.\r\n        "
+            )
+          ])
+        ]
       )
-    ]),
-    _vm._v(" "),
-    _c("hr")
-  ])
+    ],
+    1
+  )
 }
 var staticRenderFns = [
   function() {
@@ -38554,6 +38584,17 @@ var staticRenderFns = [
         },
         [_vm._v("hover over me again")]
       )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("p", [
+      _vm._v("\r\n        Hello there again, "),
+      _c("span", { attrs: { "data-tooltip-name": "our-products-tooltip" } }, [
+        _vm._v("learn about our products.")
+      ])
     ])
   }
 ]
@@ -61436,6 +61477,129 @@ module.exports = function listToStyles (parentId, list) {
   return styles
 }
 
+
+/***/ }),
+/* 230 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(2)
+/* script */
+var __vue_script__ = __webpack_require__(231)
+/* template */
+var __vue_template__ = __webpack_require__(232)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources\\assets\\js\\components\\Tooltip.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-4a4ddd5c", Component.options)
+  } else {
+    hotAPI.reload("data-v-4a4ddd5c", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 231 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_tooltip_js__ = __webpack_require__(212);
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: {
+        name: {},
+        placement: { default: 'top' },
+        offset: { default: false }
+    },
+
+    mounted: function mounted() {
+        var _this = this;
+
+        document.querySelectorAll('[data-tooltip-name=' + this.name + ']').forEach(function (elem) {
+            new __WEBPACK_IMPORTED_MODULE_0_tooltip_js__["a" /* default */](elem, {
+                placement: _this.placement,
+                title: _this.$el.innerHTML,
+                offset: _this.offset,
+                html: true
+            });
+        });
+    },
+    data: function data() {
+        return {};
+    },
+
+
+    computed: {},
+
+    methods: {}
+});
+
+/***/ }),
+/* 232 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      directives: [
+        { name: "show", rawName: "v-show", value: false, expression: "false" }
+      ]
+    },
+    [_vm._t("default")],
+    2
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-4a4ddd5c", module.exports)
+  }
+}
 
 /***/ })
 /******/ ]);

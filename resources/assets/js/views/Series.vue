@@ -20,28 +20,25 @@
     </p>
 
     <hr>
+
+    <h3>Option #3</h3>
+
+    <p>
+        Hello there again, <span data-tooltip-name="our-products-tooltip">learn about our products.</span>
+    </p>
+
+    <tooltip name="our-products-tooltip" placement="top" offset="0, 20">
+        <h1>Our Products</h1>
+
+        <p>
+            Lorem ipsum dolor sit amet, consetetur sadipscing elitr.
+        </p>
+    </tooltip>
 </div>
 </template>
 
 <script>
     export default {
-        props: [],
-
-        components: {},
-
-        data() {
-            return {
-                
-            }
-        },
-
-        computed: {
-            
-        },
-
-        methods: {
-            
-        }
     }
 </script>
 
