@@ -1,44 +1,54 @@
 <template>
-<div class="container has-text-centered">
-    <h3>Option #1</h3>
+<div class="hero is-info">
+    <div class="hero-body">
+        <div class="container has-text-centered">
+            <h3 class="title">Option #1</h3>
 
-    <p>
-        Hello there, <span data-tooltip="I am a tooltip" data-tooltip-placement="left">hover over me</span>
-    </p>
+            <p class="subtitle">
+                Hello there, <span data-tooltip="I am a tooltip" data-tooltip-placement="left">hover over me</span>
+            </p>
 
-    <p>
-        Hello there again, <span data-tooltip="So we meet again" data-tooltip-placement="bottom">hover over me again</span>
-    </p>
+            <p class="subtitle">
+                Hello there again, <span data-tooltip="So we meet again" data-tooltip-placement="bottom">hover over me again</span>
+            </p>
 
-    <hr>
+            <hr>
 
-    <h3>Option #2</h3>
+            <h3 class="title">Option #2</h3>
 
-     <p>
-        <!-- this is expression of argument Or modifier v-tooltip.top-> get top:true  -->
-        Hello there, <span v-tooltip:top="'Here is another way to make a tooltips.'">hover over me</span>
-    </p>
+            <p class="subtitle">
+                <!-- this is expression of argument Or modifier v-tooltip.top-> get top:true  -->
+                Hello there, <span v-tooltip:top="'Here is another way to make a tooltips.'">hover over me</span>
+            </p>
 
-    <hr>
+            <hr>
 
-    <h3>Option #3</h3>
+            <h3 class="title">Option #3</h3>
 
-    <p>
-        Hello there again, <span data-tooltip-name="our-products-tooltip">learn about our products.</span>
-    </p>
+            <p class="subtitle">
+                Hello there again, <span data-tooltip-name="our-products-tooltip">learn about our products.</span>
+            </p>
 
-    <tooltip name="our-products-tooltip" placement="top" offset="0, 20">
-        <h1>Our Products</h1>
+            <tooltip name="our-products-tooltip" placement="top" offset="0, 20">
+                <h1 class="title">Our Products</h1>
 
-        <p>
-            Lorem ipsum dolor sit amet, consetetur sadipscing elitr.
-        </p>
-    </tooltip>
+                <p class="subtitle">
+                    Lorem ipsum dolor sit amet, consetetur sadipscing elitr.
+                </p>
+            </tooltip>
+
+            <hr>
+
+            <render></render>
+        </div>
+    </div>
 </div>
 </template>
 
 <script>
+    import render from '../components/Render.vue'
     export default {
+        components: { render }
     }
 </script>
 
