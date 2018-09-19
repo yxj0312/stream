@@ -6413,7 +6413,7 @@ return EvEmitter;
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function(global, setImmediate) {/*!
- * Vue.js v2.5.16
+ * Vue.js v2.5.17
  * (c) 2014-2018 Evan You
  * Released under the MIT License.
  */
@@ -11502,7 +11502,7 @@ Object.defineProperty(Vue, 'FunctionalRenderContext', {
   value: FunctionalRenderContext
 });
 
-Vue.version = '2.5.16';
+Vue.version = '2.5.17';
 
 /*  */
 
@@ -33066,10 +33066,10 @@ function toComment(sourceMap) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_popper_js__ = __webpack_require__(217);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_popper_js__ = __webpack_require__(219);
 /**!
  * @fileOverview Kickass library to create and place poppers near their reference elements.
- * @version 1.2.0
+ * @version 1.3.0
  * @license
  * Copyright (c) 2016 Federico Zivolo and contributors
  *
@@ -33157,7 +33157,9 @@ var DEFAULT_OPTIONS = {
   title: '',
   template: '<div class="tooltip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>',
   trigger: 'hover focus',
-  offset: 0
+  offset: 0,
+  arrowSelector: '.tooltip-arrow, .tooltip__arrow',
+  innerSelector: '.tooltip-inner, .tooltip__inner'
 };
 
 var Tooltip = function () {
@@ -33166,16 +33168,17 @@ var Tooltip = function () {
    * @class Tooltip
    * @param {HTMLElement} reference - The DOM node used as reference of the tooltip (it can be a jQuery element).
    * @param {Object} options
-   * @param {String|PlacementFunction} options.placement=top
+   * @param {String} options.placement='top'
    *      Placement of the popper accepted values: `top(-start, -end), right(-start, -end), bottom(-start, -end),
    *      left(-start, -end)`
+   * @param {String} options.arrowSelector='.tooltip-arrow, .tooltip__arrow' - className used to locate the DOM arrow element in the tooltip.
+   * @param {String} options.innerSelector='.tooltip-inner, .tooltip__inner' - className used to locate the DOM inner element in the tooltip.
    * @param {HTMLElement|String|false} options.container=false - Append the tooltip to a specific element.
    * @param {Number|Object} options.delay=0
    *      Delay showing and hiding the tooltip (ms) - does not apply to manual trigger type.
    *      If a number is supplied, delay is applied to both hide/show.
    *      Object structure is: `{ show: 500, hide: 100 }`
    * @param {Boolean} options.html=false - Insert HTML into the tooltip. If false, the content will inserted with `textContent`.
-   * @param {String|PlacementFunction} options.placement='top' - One of the allowed placements, or a function returning one of them.
    * @param {String} [options.template='<div class="tooltip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>']
    *      Base HTML to used when creating the tooltip.
    *      The tooltip's `title` will be injected into the `.tooltip-inner` or `.tooltip__inner`.
@@ -33185,6 +33188,7 @@ var Tooltip = function () {
    * @param {String} [options.trigger='hover focus']
    *      How tooltip is triggered - click, hover, focus, manual.
    *      You may pass multiple triggers; separate them with a space. `manual` cannot be combined with any other trigger.
+   * @param {Boolean} options.closeOnClickOutside=false - Close a popper on click outside of the popper and reference element. This has effect only when options.trigger is 'click'.
    * @param {String|HTMLElement} options.boundariesElement
    *      The element used as boundaries for the tooltip. For more information refer to Popper.js'
    *      [boundariesElement docs](https://popper.js.org/popper-documentation.html)
@@ -33263,11 +33267,6 @@ var Tooltip = function () {
 
 
   //
-  // Defaults
-  //
-
-
-  //
   // Private methods
   //
 
@@ -33298,7 +33297,7 @@ var Tooltip = function () {
       tooltipNode.setAttribute('aria-hidden', 'false');
 
       // add title to tooltip
-      var titleNode = tooltipGenerator.querySelector(this.innerSelector);
+      var titleNode = tooltipGenerator.querySelector(this.options.innerSelector);
       this._addTitleContent(reference, title, allowHtml, titleNode);
 
       // return the generated tooltip node
@@ -33331,7 +33330,7 @@ var Tooltip = function () {
 
       // if the tooltipNode already exists, just show it
       if (this._tooltipNode) {
-        this._tooltipNode.style.display = '';
+        this._tooltipNode.style.visibility = 'visible';
         this._tooltipNode.setAttribute('aria-hidden', 'false');
         this.popperInstance.update();
         return this;
@@ -33362,7 +33361,7 @@ var Tooltip = function () {
 
       this._popperOptions.modifiers = _extends({}, this._popperOptions.modifiers, {
         arrow: {
-          element: this.arrowSelector
+          element: this.options.arrowSelector
         },
         offset: {
           offset: options.offset
@@ -33392,7 +33391,7 @@ var Tooltip = function () {
       this._isOpen = false;
 
       // hide tooltipNode
-      this._tooltipNode.style.display = 'none';
+      this._tooltipNode.style.visibility = 'hidden';
       this._tooltipNode.setAttribute('aria-hidden', 'true');
 
       return this;
@@ -33499,6 +33498,18 @@ var Tooltip = function () {
         };
         _this2._events.push({ event: event, func: func });
         reference.addEventListener(event, func);
+        if (event === 'click' && options.closeOnClickOutside) {
+          document.addEventListener('mousedown', function (e) {
+            if (!_this2._isOpening) {
+              return;
+            }
+            var popper = _this2.popperInstance.popper;
+            if (reference.contains(e.target) || popper.contains(e.target)) {
+              return;
+            }
+            func(e);
+          }, true);
+        }
       });
     }
   }, {
@@ -33554,7 +33565,7 @@ var Tooltip = function () {
         }
         return;
       }
-      var titleNode = this._tooltipNode.parentNode.querySelector(this.innerSelector);
+      var titleNode = this._tooltipNode.parentNode.querySelector(this.options.innerSelector);
       this._clearTitleContent(titleNode, this.options.html, this.reference.getAttribute('title') || this.options.title);
       this._addTitleContent(this.reference, title, this.options.html, titleNode);
       this.options.title = title;
@@ -33572,15 +33583,6 @@ var Tooltip = function () {
   }]);
   return Tooltip;
 }();
-
-/**
- * Placement function, its context is the Tooltip instance.
- * @memberof Tooltip
- * @callback PlacementFunction
- * @param {HTMLElement} tooltip - tooltip DOM node.
- * @param {HTMLElement} reference - reference DOM node.
- * @return {String} placement - One of the allowed placement options.
- */
 
 /**
  * Title function, its context is the Tooltip instance.
@@ -33617,8 +33619,6 @@ var _initialiseProps = function _initialiseProps() {
     return _this5._updateTitleContent(title);
   };
 
-  this.arrowSelector = '.tooltip-arrow, .tooltip__arrow';
-  this.innerSelector = '.tooltip-inner, .tooltip__inner';
   this._events = [];
 
   this._setTooltipNodeEvent = function (evt, reference, delay, options) {
@@ -33656,7 +33656,7 @@ var _initialiseProps = function _initialiseProps() {
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(146);
-module.exports = __webpack_require__(231);
+module.exports = __webpack_require__(233);
 
 
 /***/ }),
@@ -33667,9 +33667,9 @@ module.exports = __webpack_require__(231);
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__bootstrap__ = __webpack_require__(147);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__routes__ = __webpack_require__(171);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_vue_js_modal__ = __webpack_require__(215);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_vue_js_modal__ = __webpack_require__(217);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_vue_js_modal___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_vue_js_modal__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_portal_vue__ = __webpack_require__(216);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_portal_vue__ = __webpack_require__(218);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_portal_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_portal_vue__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_tooltip_js__ = __webpack_require__(144);
 
@@ -33680,10 +33680,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 Vue.use(__WEBPACK_IMPORTED_MODULE_3_portal_vue___default.a);
 Vue.use(__WEBPACK_IMPORTED_MODULE_2_vue_js_modal___default.a);
-Vue.component("series-dropdown", __webpack_require__(218));
-Vue.component("support-button", __webpack_require__(221));
-Vue.component("breadcrumb", __webpack_require__(224));
-Vue.component("tooltip", __webpack_require__(228));
+Vue.component("series-dropdown", __webpack_require__(220));
+Vue.component("support-button", __webpack_require__(223));
+Vue.component("breadcrumb", __webpack_require__(226));
+Vue.component("tooltip", __webpack_require__(230));
 
 Vue.directive('tooltip', {
     // For directive, we can hook to the bind method, and that gonna give us the element, that we are binding to.
@@ -35196,7 +35196,7 @@ var Component = normalizeComponent(
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "resources\\assets\\js\\views\\Home.vue"
+Component.options.__file = "resources/assets/js/views/Home.vue"
 
 /* hot reload */
 if (false) {(function () {
@@ -35205,9 +35205,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-11c5acec", Component.options)
+    hotAPI.createRecord("data-v-6c0a33b2", Component.options)
   } else {
-    hotAPI.reload("data-v-11c5acec", Component.options)
+    hotAPI.reload("data-v-6c0a33b2", Component.options)
   }
   module.hot.dispose(function (data) {
     disposed = true
@@ -35632,7 +35632,7 @@ var Component = normalizeComponent(
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "resources\\assets\\js\\components\\AddToStream.vue"
+Component.options.__file = "resources/assets/js/components/AddToStream.vue"
 
 /* hot reload */
 if (false) {(function () {
@@ -35641,9 +35641,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-df750416", Component.options)
+    hotAPI.createRecord("data-v-43873335", Component.options)
   } else {
-    hotAPI.reload("data-v-df750416", Component.options)
+    hotAPI.reload("data-v-43873335", Component.options)
   }
   module.hot.dispose(function (data) {
     disposed = true
@@ -35790,7 +35790,7 @@ module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-df750416", module.exports)
+    require("vue-hot-reload-api")      .rerender("data-v-43873335", module.exports)
   }
 }
 
@@ -35850,7 +35850,7 @@ module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-11c5acec", module.exports)
+    require("vue-hot-reload-api")      .rerender("data-v-6c0a33b2", module.exports)
   }
 }
 
@@ -35880,7 +35880,7 @@ var Component = normalizeComponent(
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "resources\\assets\\js\\views\\About.vue"
+Component.options.__file = "resources/assets/js/views/About.vue"
 
 /* hot reload */
 if (false) {(function () {
@@ -35889,9 +35889,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-5b755950", Component.options)
+    hotAPI.createRecord("data-v-49c1ab4a", Component.options)
   } else {
-    hotAPI.reload("data-v-5b755950", Component.options)
+    hotAPI.reload("data-v-49c1ab4a", Component.options)
   }
   module.hot.dispose(function (data) {
     disposed = true
@@ -35963,7 +35963,7 @@ var Component = normalizeComponent(
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "resources\\assets\\js\\components\\Carousel.vue"
+Component.options.__file = "resources/assets/js/components/Carousel.vue"
 
 /* hot reload */
 if (false) {(function () {
@@ -35972,9 +35972,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-5b2cd7d7", Component.options)
+    hotAPI.createRecord("data-v-50092a97", Component.options)
   } else {
-    hotAPI.reload("data-v-5b2cd7d7", Component.options)
+    hotAPI.reload("data-v-50092a97", Component.options)
   }
   module.hot.dispose(function (data) {
     disposed = true
@@ -38651,7 +38651,7 @@ module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-5b2cd7d7", module.exports)
+    require("vue-hot-reload-api")      .rerender("data-v-50092a97", module.exports)
   }
 }
 
@@ -38708,7 +38708,7 @@ module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-5b755950", module.exports)
+    require("vue-hot-reload-api")      .rerender("data-v-49c1ab4a", module.exports)
   }
 }
 
@@ -38738,7 +38738,7 @@ var Component = normalizeComponent(
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "resources\\assets\\js\\views\\Contact.vue"
+Component.options.__file = "resources/assets/js/views/Contact.vue"
 
 /* hot reload */
 if (false) {(function () {
@@ -38747,9 +38747,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-560119a3", Component.options)
+    hotAPI.createRecord("data-v-3afe55c6", Component.options)
   } else {
-    hotAPI.reload("data-v-560119a3", Component.options)
+    hotAPI.reload("data-v-3afe55c6", Component.options)
   }
   module.hot.dispose(function (data) {
     disposed = true
@@ -38826,7 +38826,7 @@ var Component = normalizeComponent(
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "resources\\assets\\js\\views\\Example.vue"
+Component.options.__file = "resources/assets/js/views/Example.vue"
 
 /* hot reload */
 if (false) {(function () {
@@ -38835,9 +38835,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-40795c26", Component.options)
+    hotAPI.createRecord("data-v-6c430d67", Component.options)
   } else {
-    hotAPI.reload("data-v-40795c26", Component.options)
+    hotAPI.reload("data-v-6c430d67", Component.options)
   }
   module.hot.dispose(function (data) {
     disposed = true
@@ -38908,7 +38908,7 @@ module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-40795c26", module.exports)
+    require("vue-hot-reload-api")      .rerender("data-v-6c430d67", module.exports)
   }
 }
 
@@ -38966,7 +38966,7 @@ module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-560119a3", module.exports)
+    require("vue-hot-reload-api")      .rerender("data-v-3afe55c6", module.exports)
   }
 }
 
@@ -38983,7 +38983,7 @@ var normalizeComponent = __webpack_require__(2)
 /* script */
 var __vue_script__ = __webpack_require__(213)
 /* template */
-var __vue_template__ = __webpack_require__(214)
+var __vue_template__ = __webpack_require__(216)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -39000,7 +39000,7 @@ var Component = normalizeComponent(
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "resources\\assets\\js\\views\\Series.vue"
+Component.options.__file = "resources/assets/js/views/Series.vue"
 
 /* hot reload */
 if (false) {(function () {
@@ -39009,9 +39009,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-b7ce7d78", Component.options)
+    hotAPI.createRecord("data-v-7f56ae8a", Component.options)
   } else {
-    hotAPI.reload("data-v-b7ce7d78", Component.options)
+    hotAPI.reload("data-v-7f56ae8a", Component.options)
   }
   module.hot.dispose(function (data) {
     disposed = true
@@ -39032,13 +39032,13 @@ var content = __webpack_require__(210);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
-var update = __webpack_require__(211)("b6dc999c", content, false, {});
+var update = __webpack_require__(211)("08cec74c", content, false, {});
 // Hot Module Replacement
 if(false) {
  // When the styles change, update the <style> tags
  if(!content.locals) {
-   module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-b7ce7d78\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./Series.vue", function() {
-     var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-b7ce7d78\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./Series.vue");
+   module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-7f56ae8a\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./Series.vue", function() {
+     var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-7f56ae8a\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./Series.vue");
      if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
      update(newContent);
    });
@@ -39328,7 +39328,7 @@ module.exports = function listToStyles (parentId, list) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_Render_vue__ = __webpack_require__(233);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_Render_vue__ = __webpack_require__(214);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_Render_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__components_Render_vue__);
 //
 //
@@ -39385,6 +39385,86 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 /***/ }),
 /* 214 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(2)
+/* script */
+var __vue_script__ = __webpack_require__(215)
+/* template */
+var __vue_template__ = null
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/Render.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-233fc8e6", Component.options)
+  } else {
+    hotAPI.reload("data-v-233fc8e6", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 215 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    /* render(createElement) {
+        return createElement('h1', 'Hello World');
+    } */
+
+    /* render(h) {
+        return h('h1', 'Hello World');
+    } */
+
+    // h refers to hyperscript
+    /*  render:h => h('h1', 'Hello World') */
+
+    data: function data() {
+        return {
+            name: 'John Doe'
+        };
+    },
+    render: function render(element) {
+        // nest structure
+        return element('div', { attrs: { id: 'foobar' } }, [element('h1', { class: 'title' }, this.name), element('h2', { class: 'subtitle' }, this.name)]);
+
+        // api just like v-bind :class, so we can add an array here ['one','two']
+        /* return element('h1', { class: 'title' }, this.name); */
+    }
+});
+
+/***/ }),
+/* 216 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -39515,12 +39595,12 @@ module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-b7ce7d78", module.exports)
+    require("vue-hot-reload-api")      .rerender("data-v-7f56ae8a", module.exports)
   }
 }
 
 /***/ }),
-/* 215 */
+/* 217 */
 /***/ (function(module, exports, __webpack_require__) {
 
 !function(root, factory) {
@@ -39556,7 +39636,7 @@ if (false) {
             return __webpack_require__.d(getter, "a", getter), getter;
         }, __webpack_require__.o = function(object, property) {
             return Object.prototype.hasOwnProperty.call(object, property);
-        }, __webpack_require__.p = "/dist/", __webpack_require__(__webpack_require__.s = 3);
+        }, __webpack_require__.p = "/dist/", __webpack_require__(__webpack_require__.s = 4);
     }([ function(module, exports) {
         module.exports = function(rawScriptExports, compiledTemplate, scopeId, cssModules) {
             var esModule, scriptExports = rawScriptExports = rawScriptExports || {}, type = typeof rawScriptExports.default;
@@ -39577,6 +39657,39 @@ if (false) {
                 exports: scriptExports,
                 options: options
             };
+        };
+    }, function(module, exports, __webpack_require__) {
+        "use strict";
+        Object.defineProperty(exports, "__esModule", {
+            value: !0
+        });
+        var _extends = Object.assign || function(target) {
+            for (var i = 1; i < arguments.length; i++) {
+                var source = arguments[i];
+                for (var key in source) Object.prototype.hasOwnProperty.call(source, key) && (target[key] = source[key]);
+            }
+            return target;
+        }, generateId = exports.generateId = function() {
+            var index = arguments.length > 0 && void 0 !== arguments[0] ? arguments[0] : 0;
+            return function() {
+                return (index++).toString();
+            };
+        }();
+        exports.inRange = function(from, to, value) {
+            return value < from ? from : value > to ? to : value;
+        }, exports.createModalEvent = function() {
+            var args = arguments.length > 0 && void 0 !== arguments[0] ? arguments[0] : {};
+            return _extends({
+                id: generateId(),
+                timestamp: Date.now(),
+                canceled: !1
+            }, args);
+        }, exports.getMutationObserver = function() {
+            if ("undefined" != typeof window) for (var prefixes = [ "", "WebKit", "Moz", "O", "Ms" ], i = 0; i < prefixes.length; i++) {
+                var name = prefixes[i] + "MutationObserver";
+                if (name in window) return window[name];
+            }
+            return !1;
         };
     }, function(module, exports) {
         module.exports = function() {
@@ -39694,20 +39807,32 @@ if (false) {
                 default: obj
             };
         }
+        function getModalsContainer(Vue, options, root) {
+            if (!root._dynamicContainer && options.injectModalsContainer) {
+                var modalsContainer = document.createElement("div");
+                document.body.appendChild(modalsContainer), new Vue({
+                    parent: root,
+                    render: function(h) {
+                        return h(_ModalsContainer2.default);
+                    }
+                }).$mount(modalsContainer);
+            }
+            return root._dynamicContainer;
+        }
         Object.defineProperty(exports, "__esModule", {
             value: !0
         });
         var _Modal = __webpack_require__(6), _Modal2 = _interopRequireDefault(_Modal), _Dialog = __webpack_require__(5), _Dialog2 = _interopRequireDefault(_Dialog), _ModalsContainer = __webpack_require__(7), _ModalsContainer2 = _interopRequireDefault(_ModalsContainer), Plugin = {
             install: function(Vue) {
                 var options = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : {};
-                if (!this.installed && (this.installed = !0, this.event = new Vue(), this.dynamicContainer = null, 
+                this.installed || (this.installed = !0, this.event = new Vue(), this.rootInstance = null, 
                 this.componentName = options.componentName || "modal", Vue.prototype.$modal = {
-                    _setDynamicContainer: function(dynamicContainer) {
-                        Plugin.dynamicContainer = dynamicContainer;
-                    },
                     show: function(modal, paramsOrProps, params) {
                         var events = arguments.length > 3 && void 0 !== arguments[3] ? arguments[3] : {};
-                        "string" == typeof modal ? Plugin.event.$emit("toggle", modal, !0, paramsOrProps) : null === Plugin.dynamicContainer ? console.warn("[vue-js-modal] In order to render dynamic modals, a <modals-container> component must be present on the page") : Plugin.dynamicContainer.add(modal, paramsOrProps, params, events);
+                        if ("string" == typeof modal) return void Plugin.event.$emit("toggle", modal, !0, paramsOrProps);
+                        var root = params && params.root ? params.root : Plugin.rootInstance, container = getModalsContainer(Vue, options, root);
+                        if (container) return void container.add(modal, paramsOrProps, params, events);
+                        console.warn("[vue-js-modal] In order to render dynamic modals, a <modals-container> component must be present on the page");
                     },
                     hide: function(name, params) {
                         Plugin.event.$emit("toggle", name, !1, params);
@@ -39716,28 +39841,15 @@ if (false) {
                         Plugin.event.$emit("toggle", name, void 0, params);
                     }
                 }, Vue.component(this.componentName, _Modal2.default), options.dialog && Vue.component("v-dialog", _Dialog2.default), 
-                options.dynamic)) if (options.injectModalsContainer) {
-                    var modalsContainer = document.createElement("div");
-                    document.body.appendChild(modalsContainer), new Vue({
-                        render: function(h) {
-                            return h(_ModalsContainer2.default);
-                        }
-                    }).$mount(modalsContainer);
-                } else Vue.component("modals-container", _ModalsContainer2.default);
+                options.dynamic && (Vue.component("modals-container", _ModalsContainer2.default), 
+                Vue.mixin({
+                    beforeMount: function() {
+                        null === Plugin.rootInstance && (Plugin.rootInstance = this.$root);
+                    }
+                })));
             }
         };
         exports.default = Plugin;
-    }, function(module, exports, __webpack_require__) {
-        "use strict";
-        Object.defineProperty(exports, "__esModule", {
-            value: !0
-        });
-        var inRange = exports.inRange = function(from, to, value) {
-            return value < from ? from : value > to ? to : value;
-        };
-        exports.default = {
-            inRange: inRange
-        };
     }, function(module, exports, __webpack_require__) {
         __webpack_require__(21);
         var Component = __webpack_require__(0)(__webpack_require__(8), __webpack_require__(18), null, null);
@@ -39833,7 +39945,13 @@ if (false) {
         Object.defineProperty(exports, "__esModule", {
             value: !0
         });
-        var _index = __webpack_require__(3), _index2 = _interopRequireDefault(_index), _Resizer = __webpack_require__(16), _Resizer2 = _interopRequireDefault(_Resizer), _util = __webpack_require__(4), _parser = __webpack_require__(12);
+        var _extends = Object.assign || function(target) {
+            for (var i = 1; i < arguments.length; i++) {
+                var source = arguments[i];
+                for (var key in source) Object.prototype.hasOwnProperty.call(source, key) && (target[key] = source[key]);
+            }
+            return target;
+        }, _index = __webpack_require__(4), _index2 = _interopRequireDefault(_index), _Resizer = __webpack_require__(16), _Resizer2 = _interopRequireDefault(_Resizer), _util = __webpack_require__(1), _parser = __webpack_require__(12);
         exports.default = {
             name: "VueJsModal",
             props: {
@@ -39864,6 +39982,10 @@ if (false) {
                 reset: {
                     type: Boolean,
                     default: !1
+                },
+                overlayTransition: {
+                    type: String,
+                    default: "overlay-fade"
                 },
                 transition: {
                     type: String
@@ -39953,45 +40075,25 @@ if (false) {
                     mutationObserver: null
                 };
             },
-            watch: {
-                visible: function(value) {
-                    var _this = this;
-                    value ? (this.visibility.overlay = !0, setTimeout(function() {
-                        _this.visibility.modal = !0, _this.$nextTick(function() {
-                            _this.addDraggableListeners(), _this.callAfterEvent(!0);
-                        });
-                    }, this.delay)) : (this.visibility.modal = !1, setTimeout(function() {
-                        _this.visibility.overlay = !1, _this.$nextTick(function() {
-                            _this.removeDraggableListeners(), _this.callAfterEvent(!1);
-                        });
-                    }, this.delay));
-                }
-            },
             created: function() {
                 this.setInitialSize();
             },
             beforeMount: function() {
-                var _this2 = this;
-                if (_index2.default.event.$on("toggle", function(name, state, params) {
-                    name === _this2.name && (void 0 === state && (state = !_this2.visible), _this2.toggle(state, params));
-                }), window.addEventListener("resize", this.onWindowResize), this.onWindowResize(), 
-                this.scrollable && !this.isAutoHeight && console.warn('Modal "' + this.name + '" has scrollable flag set to true but height is not "auto" (' + this.height + ")"), 
+                var _this = this;
+                if (_index2.default.event.$on("toggle", this.handleToggleEvent), window.addEventListener("resize", this.handleWindowResize), 
+                this.handleWindowResize(), this.scrollable && !this.isAutoHeight && console.warn('Modal "' + this.name + '" has scrollable flag set to true but height is not "auto" (' + this.height + ")"), 
                 this.isAutoHeight) {
-                    var MutationObserver = function() {
-                        for (var prefixes = [ "", "WebKit", "Moz", "O", "Ms" ], i = 0; i < prefixes.length; i++) {
-                            var name = prefixes[i] + "MutationObserver";
-                            if (name in window) return window[name];
-                        }
-                        return !1;
-                    }();
+                    var MutationObserver = (0, _util.getMutationObserver)();
                     MutationObserver && (this.mutationObserver = new MutationObserver(function(mutations) {
-                        _this2.updateRenderedHeight();
+                        _this.updateRenderedHeight();
                     }));
                 }
-                this.clickToClose && window.addEventListener("keyup", this.onEscapeKeyUp);
+                this.clickToClose && window.addEventListener("keyup", this.handleEscapeKeyUp);
             },
             beforeDestroy: function() {
-                window.removeEventListener("resize", this.onWindowResize), this.clickToClose && window.removeEventListener("keyup", this.onEscapeKeyUp);
+                _index2.default.event.$off("toggle", this.handleToggleEvent), window.removeEventListener("resize", this.handleWindowResize), 
+                this.clickToClose && window.removeEventListener("keyup", this.handleEscapeKeyUp), 
+                this.scrollable && document.body.classList.remove("v--modal-block-scroll");
             },
             computed: {
                 isAutoHeight: function() {
@@ -40000,8 +40102,8 @@ if (false) {
                 position: function() {
                     var window = this.window, shift = this.shift, pivotX = this.pivotX, pivotY = this.pivotY, trueModalWidth = this.trueModalWidth, trueModalHeight = this.trueModalHeight, maxLeft = window.width - trueModalWidth, maxTop = window.height - trueModalHeight, left = shift.left + pivotX * maxLeft, top = shift.top + pivotY * maxTop;
                     return {
-                        left: (0, _util.inRange)(0, maxLeft, left),
-                        top: (0, _util.inRange)(0, maxTop, top)
+                        left: parseInt((0, _util.inRange)(0, maxLeft, left)),
+                        top: parseInt((0, _util.inRange)(0, maxTop, top))
                     };
                 },
                 trueModalWidth: function() {
@@ -40020,9 +40122,6 @@ if (false) {
                         scrollable: this.scrollable && this.isAutoHeight
                     };
                 },
-                backgroundClickClass: function() {
-                    return [ "v--modal-background-click" ];
-                },
                 modalClass: function() {
                     return [ "v--modal-box", this.classes ];
                 },
@@ -40036,104 +40135,109 @@ if (false) {
                 }
             },
             methods: {
+                handleToggleEvent: function(name, state, params) {
+                    if (this.name === name) {
+                        var nextState = void 0 === state ? !this.visible : state;
+                        this.toggle(nextState, params);
+                    }
+                },
                 setInitialSize: function() {
                     var modal = this.modal, width = (0, _parser.parseNumber)(this.width), height = (0, 
                     _parser.parseNumber)(this.height);
                     modal.width = width.value, modal.widthType = width.type, modal.height = height.value, 
                     modal.heightType = height.type;
                 },
-                onEscapeKeyUp: function(event) {
+                handleEscapeKeyUp: function(event) {
                     27 === event.which && this.visible && this.$modal.hide(this.name);
                 },
-                onWindowResize: function() {
+                handleWindowResize: function() {
                     this.window.width = window.innerWidth, this.window.height = window.innerHeight;
                 },
-                genEventObject: function(params) {
-                    var eventData = {
+                createModalEvent: function() {
+                    var args = arguments.length > 0 && void 0 !== arguments[0] ? arguments[0] : {};
+                    return (0, _util.createModalEvent)(_extends({
                         name: this.name,
-                        timestamp: Date.now(),
-                        canceled: !1,
                         ref: this.$refs.modal
-                    };
-                    return Object.assign(eventData, params || {});
+                    }, args));
                 },
-                onModalResize: function(event) {
+                handleModalResize: function(event) {
                     this.modal.widthType = "px", this.modal.width = event.size.width, this.modal.heightType = "px", 
                     this.modal.height = event.size.height;
-                    var size = this.modal.size, resizeEvent = this.genEventObject({
+                    var size = this.modal.size;
+                    this.$emit("resize", this.createModalEvent({
                         size: size
-                    });
-                    this.$emit("resize", resizeEvent);
+                    }));
                 },
-                toggle: function(state, params) {
+                toggle: function(nextState, params) {
                     var reset = this.reset, scrollable = this.scrollable, visible = this.visible;
-                    if (visible !== state) {
+                    if (visible !== nextState) {
                         var beforeEventName = visible ? "before-close" : "before-open";
-                        "before-open" === beforeEventName ? (document.activeElement && "function" == typeof document.activeElement.blur && document.activeElement.blur(), 
-                        reset && (this.setInitialSize(), this.shift.left = 0, this.shift.top = 0), scrollable && (document.getElementsByTagName("html")[0].classList.add("v--modal-block-scroll"), 
-                        document.body.classList.add("v--modal-block-scroll"))) : scrollable && (document.getElementsByTagName("html")[0].classList.remove("v--modal-block-scroll"), 
-                        document.body.classList.remove("v--modal-block-scroll"));
+                        "before-open" === beforeEventName ? (document.activeElement && "BODY" !== document.activeElement.tagName && document.activeElement.blur && document.activeElement.blur(), 
+                        reset && (this.setInitialSize(), this.shift.left = 0, this.shift.top = 0), scrollable && document.body.classList.add("v--modal-block-scroll")) : scrollable && document.body.classList.remove("v--modal-block-scroll");
                         var stopEventExecution = !1, stop = function() {
                             stopEventExecution = !0;
-                        }, beforeEvent = this.genEventObject({
+                        }, beforeEvent = this.createModalEvent({
                             stop: stop,
-                            state: state,
+                            state: nextState,
                             params: params
                         });
-                        this.$emit(beforeEventName, beforeEvent), stopEventExecution || (this.visible = state);
+                        this.$emit(beforeEventName, beforeEvent), stopEventExecution || (this.visible = nextState, 
+                        this.visible ? this.startOpeningModal() : this.startClosingModal());
                     }
                 },
                 getDraggableElement: function() {
                     var selector = "string" != typeof this.draggable ? ".v--modal-box" : this.draggable;
-                    if (selector) {
-                        var handler = this.$refs.overlay.querySelector(selector);
-                        if (handler) return handler;
-                    }
+                    return selector ? this.$refs.overlay.querySelector(selector) : null;
                 },
-                onBackgroundClick: function() {
+                handleBackgroundClick: function() {
                     this.clickToClose && this.toggle(!1);
                 },
-                addDraggableListeners: function() {
+                startOpeningModal: function() {
+                    var _this2 = this;
+                    this.visibility.overlay = !0, setTimeout(function() {
+                        _this2.visibility.modal = !0;
+                    }, this.delay);
+                },
+                startClosingModal: function() {
                     var _this3 = this;
+                    this.visibility.modal = !1, setTimeout(function() {
+                        _this3.visibility.overlay = !1;
+                    }, this.delay);
+                },
+                addDraggableListeners: function() {
+                    var _this4 = this;
                     if (this.draggable) {
                         var dragger = this.getDraggableElement();
                         if (dragger) {
                             var startX = 0, startY = 0, cachedShiftX = 0, cachedShiftY = 0, getPosition = function(event) {
                                 return event.touches && event.touches.length > 0 ? event.touches[0] : event;
-                            }, mousedown = function(event) {
+                            }, handleDraggableMousedown = function(event) {
                                 var target = event.target;
                                 if (!target || "INPUT" !== target.nodeName) {
                                     var _getPosition = getPosition(event), clientX = _getPosition.clientX, clientY = _getPosition.clientY;
-                                    document.addEventListener("mousemove", _mousemove), document.addEventListener("mouseup", _mouseup), 
-                                    document.addEventListener("touchmove", _mousemove), document.addEventListener("touchend", _mouseup), 
-                                    startX = clientX, startY = clientY, cachedShiftX = _this3.shift.left, cachedShiftY = _this3.shift.top;
+                                    document.addEventListener("mousemove", _handleDraggableMousemove), document.addEventListener("touchmove", _handleDraggableMousemove), 
+                                    document.addEventListener("mouseup", _handleDraggableMouseup), document.addEventListener("touchend", _handleDraggableMouseup), 
+                                    startX = clientX, startY = clientY, cachedShiftX = _this4.shift.left, cachedShiftY = _this4.shift.top;
                                 }
-                            }, _mousemove = function(event) {
+                            }, _handleDraggableMousemove = function(event) {
                                 var _getPosition2 = getPosition(event), clientX = _getPosition2.clientX, clientY = _getPosition2.clientY;
-                                _this3.shift.left = cachedShiftX + clientX - startX, _this3.shift.top = cachedShiftY + clientY - startY, 
+                                _this4.shift.left = cachedShiftX + clientX - startX, _this4.shift.top = cachedShiftY + clientY - startY, 
                                 event.preventDefault();
-                            }, _mouseup = function _mouseup(event) {
-                                document.removeEventListener("mousemove", _mousemove), document.removeEventListener("mouseup", _mouseup), 
-                                document.removeEventListener("touchmove", _mousemove), document.removeEventListener("touchend", _mouseup), 
+                            }, _handleDraggableMouseup = function _handleDraggableMouseup(event) {
+                                document.removeEventListener("mousemove", _handleDraggableMousemove), document.removeEventListener("touchmove", _handleDraggableMousemove), 
+                                document.removeEventListener("mouseup", _handleDraggableMouseup), document.removeEventListener("touchend", _handleDraggableMouseup), 
                                 event.preventDefault();
                             };
-                            dragger.addEventListener("mousedown", mousedown), dragger.addEventListener("touchstart", mousedown);
+                            dragger.addEventListener("mousedown", handleDraggableMousedown), dragger.addEventListener("touchstart", handleDraggableMousedown);
                         }
                     }
                 },
                 removeDraggableListeners: function() {},
-                callAfterEvent: function(state) {
-                    state ? this.connectObserver() : this.disconnectObserver();
-                    var eventName = state ? "opened" : "closed", event = this.genEventObject({
-                        state: state
-                    });
-                    this.$emit(eventName, event);
-                },
                 updateRenderedHeight: function() {
                     this.$refs.modal && (this.modal.renderedHeight = this.$refs.modal.getBoundingClientRect().height);
                 },
                 connectObserver: function() {
-                    this.mutationObserver && this.mutationObserver.observe(this.$refs.modal, {
+                    this.mutationObserver && this.mutationObserver.observe(this.$refs.overlay, {
                         childList: !0,
                         attributes: !0,
                         subtree: !0
@@ -40141,6 +40245,19 @@ if (false) {
                 },
                 disconnectObserver: function() {
                     this.mutationObserver && this.mutationObserver.disconnect();
+                },
+                beforeTransitionEnter: function() {
+                    this.connectObserver();
+                },
+                afterTransitionEnter: function() {
+                    this.addDraggableListeners(), this.$emit("opened", this.createModalEvent({
+                        state: !0
+                    }));
+                },
+                afterTransitionLeave: function() {
+                    this.removeDraggableListeners(), this.disconnectObserver(), this.$emit("closed", this.createModalEvent({
+                        state: !1
+                    }));
                 }
             }
         };
@@ -40148,28 +40265,37 @@ if (false) {
         "use strict";
         Object.defineProperty(exports, "__esModule", {
             value: !0
-        }), exports.default = {
+        });
+        var _extends = Object.assign || function(target) {
+            for (var i = 1; i < arguments.length; i++) {
+                var source = arguments[i];
+                for (var key in source) Object.prototype.hasOwnProperty.call(source, key) && (target[key] = source[key]);
+            }
+            return target;
+        }, _util = __webpack_require__(1);
+        exports.default = {
             data: function() {
                 return {
-                    uid: 0,
                     modals: []
                 };
             },
             created: function() {
-                this.$modal._setDynamicContainer(this);
+                this.$root._dynamicContainer = this;
             },
             methods: {
-                add: function(modal, params, config, events) {
-                    var _this = this, id = this.uid++;
-                    config = config ? Object.assign({}, config) : {}, config.name || (config.name = "_dynamic-modal-" + id), 
+                add: function(component) {
+                    var componentAttrs = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : {}, _this = this, modalAttrs = arguments.length > 2 && void 0 !== arguments[2] ? arguments[2] : {}, modalListeners = arguments[3], id = (0, 
+                    _util.generateId)(), name = modalAttrs.name || "_dynamic_modal_" + id;
                     this.modals.push({
                         id: id,
-                        component: modal,
-                        params: params || {},
-                        config: config,
-                        events: events
+                        modalAttrs: _extends({}, modalAttrs, {
+                            name: name
+                        }),
+                        modalListeners: modalListeners,
+                        component: component,
+                        componentAttrs: componentAttrs
                     }), this.$nextTick(function() {
-                        _this.$modal.show(config.name);
+                        _this.$modal.show(name);
                     });
                 },
                 remove: function(id) {
@@ -40182,7 +40308,7 @@ if (false) {
         Object.defineProperty(exports, "__esModule", {
             value: !0
         });
-        var _util = __webpack_require__(4);
+        var _util = __webpack_require__(1);
         exports.default = {
             name: "VueJsModalResizer",
             props: {
@@ -40303,11 +40429,11 @@ if (false) {
             return value >= 0;
         };
     }, function(module, exports, __webpack_require__) {
-        exports = module.exports = __webpack_require__(1)(), exports.push([ module.i, "\n.vue-dialog div {\n  box-sizing: border-box;\n}\n.vue-dialog .dialog-flex {\n  width: 100%;\n  height: 100%;\n}\n.vue-dialog .dialog-content {\n  flex: 1 0 auto;\n  width: 100%;\n  padding: 15px;\n  font-size: 14px;\n}\n.vue-dialog .dialog-c-title {\n  font-weight: 600;\n  padding-bottom: 15px;\n}\n.vue-dialog .dialog-c-text {\n}\n.vue-dialog .vue-dialog-buttons {\n  display: flex;\n  flex: 0 1 auto;\n  width: 100%;\n  border-top: 1px solid #eee;\n}\n.vue-dialog .vue-dialog-buttons-none {\n  width: 100%;\n  padding-bottom: 15px;\n}\n.vue-dialog-button {\n  font-size: 12px !important;\n  background: transparent;\n  padding: 0;\n  margin: 0;\n  border: 0;\n  cursor: pointer;\n  box-sizing: border-box;\n  line-height: 40px;\n  height: 40px;\n  color: inherit;\n  font: inherit;\n  outline: none;\n}\n.vue-dialog-button:hover {\n  background: rgba(0, 0, 0, 0.01);\n}\n.vue-dialog-button:active {\n  background: rgba(0, 0, 0, 0.025);\n}\n.vue-dialog-button:not(:first-of-type) {\n  border-left: 1px solid #eee;\n}\n", "" ]);
+        exports = module.exports = __webpack_require__(2)(), exports.push([ module.i, "\n.vue-dialog div {\n  box-sizing: border-box;\n}\n.vue-dialog .dialog-flex {\n  width: 100%;\n  height: 100%;\n}\n.vue-dialog .dialog-content {\n  flex: 1 0 auto;\n  width: 100%;\n  padding: 15px;\n  font-size: 14px;\n}\n.vue-dialog .dialog-c-title {\n  font-weight: 600;\n  padding-bottom: 15px;\n}\n.vue-dialog .dialog-c-text {\n}\n.vue-dialog .vue-dialog-buttons {\n  display: flex;\n  flex: 0 1 auto;\n  width: 100%;\n  border-top: 1px solid #eee;\n}\n.vue-dialog .vue-dialog-buttons-none {\n  width: 100%;\n  padding-bottom: 15px;\n}\n.vue-dialog-button {\n  font-size: 12px !important;\n  background: transparent;\n  padding: 0;\n  margin: 0;\n  border: 0;\n  cursor: pointer;\n  box-sizing: border-box;\n  line-height: 40px;\n  height: 40px;\n  color: inherit;\n  font: inherit;\n  outline: none;\n}\n.vue-dialog-button:hover {\n  background: rgba(0, 0, 0, 0.01);\n}\n.vue-dialog-button:active {\n  background: rgba(0, 0, 0, 0.025);\n}\n.vue-dialog-button:not(:first-of-type) {\n  border-left: 1px solid #eee;\n}\n", "" ]);
     }, function(module, exports, __webpack_require__) {
-        exports = module.exports = __webpack_require__(1)(), exports.push([ module.i, "\n.v--modal-block-scroll {\n  overflow: hidden;\n  width: 100vw;\n}\n.v--modal-overlay {\n  position: fixed;\n  box-sizing: border-box;\n  left: 0;\n  top: 0;\n  width: 100%;\n  height: 100vh;\n  background: rgba(0, 0, 0, 0.2);\n  z-index: 999;\n  opacity: 1;\n}\n.v--modal-overlay.scrollable {\n  height: 100%;\n  min-height: 100vh;\n  overflow-y: auto;\n  -webkit-overflow-scrolling: touch;\n}\n.v--modal-overlay .v--modal-background-click {\n  min-height: 100%;\n  width: 100%;\n  padding-bottom: 10px;\n}\n.v--modal-overlay .v--modal-box {\n  position: relative;\n  overflow: hidden;\n  box-sizing: border-box;\n}\n.v--modal-overlay.scrollable .v--modal-box {\n  margin-bottom: 2px;\n  /* transition: top 0.2s ease; */\n}\n.v--modal {\n  background-color: white;\n  text-align: left;\n  border-radius: 3px;\n  box-shadow: 0 20px 60px -2px rgba(27, 33, 58, 0.4);\n  padding: 0;\n}\n.v--modal.v--modal-fullscreen {\n  width: 100vw;\n  height: 100vh;\n  margin: 0;\n  left: 0;\n  top: 0;\n}\n.v--modal-top-right {\n  display: block;\n  position: absolute;\n  right: 0;\n  top: 0;\n}\n.overlay-fade-enter-active,\n.overlay-fade-leave-active {\n  transition: all 0.2s;\n}\n.overlay-fade-enter,\n.overlay-fade-leave-active {\n  opacity: 0;\n}\n.nice-modal-fade-enter-active,\n.nice-modal-fade-leave-active {\n  transition: all 0.4s;\n}\n.nice-modal-fade-enter,\n.nice-modal-fade-leave-active {\n  opacity: 0;\n  transform: translateY(-20px);\n}\n", "" ]);
+        exports = module.exports = __webpack_require__(2)(), exports.push([ module.i, "\n.v--modal-block-scroll {\n  overflow: hidden;\n  width: 100vw;\n}\n.v--modal-overlay {\n  position: fixed;\n  box-sizing: border-box;\n  left: 0;\n  top: 0;\n  width: 100%;\n  height: 100vh;\n  background: rgba(0, 0, 0, 0.2);\n  z-index: 999;\n  opacity: 1;\n}\n.v--modal-overlay.scrollable {\n  height: 100%;\n  min-height: 100vh;\n  overflow-y: auto;\n  -webkit-overflow-scrolling: touch;\n}\n.v--modal-overlay .v--modal-background-click {\n  min-height: 100%;\n  width: 100%;\n}\n.v--modal-overlay .v--modal-box {\n  position: relative;\n  overflow: hidden;\n  box-sizing: border-box;\n}\n.v--modal-overlay.scrollable .v--modal-box {\n  margin-bottom: 2px;\n}\n.v--modal {\n  background-color: white;\n  text-align: left;\n  border-radius: 3px;\n  box-shadow: 0 20px 60px -2px rgba(27, 33, 58, 0.4);\n  padding: 0;\n}\n.v--modal.v--modal-fullscreen {\n  width: 100vw;\n  height: 100vh;\n  margin: 0;\n  left: 0;\n  top: 0;\n}\n.v--modal-top-right {\n  display: block;\n  position: absolute;\n  right: 0;\n  top: 0;\n}\n.overlay-fade-enter-active,\n.overlay-fade-leave-active {\n  transition: all 0.2s;\n}\n.overlay-fade-enter,\n.overlay-fade-leave-active {\n  opacity: 0;\n}\n.nice-modal-fade-enter-active,\n.nice-modal-fade-leave-active {\n  transition: all 0.4s;\n}\n.nice-modal-fade-enter,\n.nice-modal-fade-leave-active {\n  opacity: 0;\n  transform: translateY(-20px);\n}\n", "" ]);
     }, function(module, exports, __webpack_require__) {
-        exports = module.exports = __webpack_require__(1)(), exports.push([ module.i, "\n.vue-modal-resizer {\n  display: block;\n  overflow: hidden;\n  position: absolute;\n  width: 12px;\n  height: 12px;\n  right: 0;\n  bottom: 0;\n  z-index: 9999999;\n  background: transparent;\n  cursor: se-resize;\n}\n.vue-modal-resizer::after {\n  display: block;\n  position: absolute;\n  content: '';\n  background: transparent;\n  left: 0;\n  top: 0;\n  width: 0;\n  height: 0;\n  border-bottom: 10px solid #ddd;\n  border-left: 10px solid transparent;\n}\n.vue-modal-resizer.clicked::after {\n  border-bottom: 10px solid #369be9;\n}\n", "" ]);
+        exports = module.exports = __webpack_require__(2)(), exports.push([ module.i, "\n.vue-modal-resizer {\n  display: block;\n  overflow: hidden;\n  position: absolute;\n  width: 12px;\n  height: 12px;\n  right: 0;\n  bottom: 0;\n  z-index: 9999999;\n  background: transparent;\n  cursor: se-resize;\n}\n.vue-modal-resizer::after {\n  display: block;\n  position: absolute;\n  content: '';\n  background: transparent;\n  left: 0;\n  top: 0;\n  width: 0;\n  height: 0;\n  border-bottom: 10px solid #ddd;\n  border-left: 10px solid transparent;\n}\n.vue-modal-resizer.clicked::after {\n  border-bottom: 10px solid #369be9;\n}\n", "" ]);
     }, function(module, exports, __webpack_require__) {
         __webpack_require__(23);
         var Component = __webpack_require__(0)(__webpack_require__(11), __webpack_require__(20), null, null);
@@ -40332,14 +40458,14 @@ if (false) {
                                 _vm.remove(modal.id);
                             }
                         }
-                    }, "modal", modal.config, !1), modal.events), [ _c(modal.component, _vm._g(_vm._b({
+                    }, "modal", modal.modalAttrs, !1), modal.modalListeners), [ _c(modal.component, _vm._g(_vm._b({
                         tag: "component",
                         on: {
                             close: function($event) {
-                                _vm.$modal.hide(modal.config.name);
+                                _vm.$modal.hide(modal.modalAttrs.name);
                             }
                         }
-                    }, "component", modal.params, !1), _vm.$listeners)) ], 1);
+                    }, "component", modal.componentAttrs, !1), _vm.$listeners)) ], 1);
                 }));
             },
             staticRenderFns: []
@@ -40412,23 +40538,25 @@ if (false) {
                 var _vm = this, _h = _vm.$createElement, _c = _vm._self._c || _h;
                 return _c("transition", {
                     attrs: {
-                        name: "overlay-fade"
+                        name: _vm.overlayTransition
                     }
                 }, [ _vm.visibility.overlay ? _c("div", {
                     ref: "overlay",
                     class: _vm.overlayClass,
                     attrs: {
-                        "aria-expanded": _vm.visible.toString(),
+                        "aria-expanded": _vm.visibility.overlay.toString(),
                         "data-modal": _vm.name
                     }
                 }, [ _c("div", {
-                    class: _vm.backgroundClickClass,
+                    staticClass: "v--modal-background-click",
                     on: {
                         mousedown: function($event) {
-                            $event.stopPropagation(), _vm.onBackgroundClick($event);
+                            if ($event.target !== $event.currentTarget) return null;
+                            _vm.handleBackgroundClick($event);
                         },
                         touchstart: function($event) {
-                            $event.stopPropagation(), _vm.onBackgroundClick($event);
+                            if ($event.target !== $event.currentTarget) return null;
+                            _vm.handleBackgroundClick($event);
                         }
                     }
                 }, [ _c("div", {
@@ -40436,26 +40564,23 @@ if (false) {
                 }, [ _vm._t("top-right") ], 2), _vm._v(" "), _c("transition", {
                     attrs: {
                         name: _vm.transition
+                    },
+                    on: {
+                        "before-enter": _vm.beforeTransitionEnter,
+                        "after-enter": _vm.afterTransitionEnter,
+                        "after-leave": _vm.afterTransitionLeave
                     }
                 }, [ _vm.visibility.modal ? _c("div", {
                     ref: "modal",
                     class: _vm.modalClass,
-                    style: _vm.modalStyle,
-                    on: {
-                        mousedown: function($event) {
-                            $event.stopPropagation();
-                        },
-                        touchstart: function($event) {
-                            $event.stopPropagation();
-                        }
-                    }
+                    style: _vm.modalStyle
                 }, [ _vm._t("default"), _vm._v(" "), _vm.resizable && !_vm.isAutoHeight ? _c("resizer", {
                     attrs: {
                         "min-width": _vm.minWidth,
                         "min-height": _vm.minHeight
                     },
                     on: {
-                        resize: _vm.onModalResize
+                        resize: _vm.handleModalResize
                     }
                 }) : _vm._e() ], 2) : _vm._e() ]) ], 1) ]) : _vm._e() ]);
             },
@@ -40474,15 +40599,15 @@ if (false) {
     }, function(module, exports, __webpack_require__) {
         var content = __webpack_require__(13);
         "string" == typeof content && (content = [ [ module.i, content, "" ] ]), content.locals && (module.exports = content.locals);
-        __webpack_require__(2)("237a7ca4", content, !1);
+        __webpack_require__(3)("237a7ca4", content, !1);
     }, function(module, exports, __webpack_require__) {
         var content = __webpack_require__(14);
         "string" == typeof content && (content = [ [ module.i, content, "" ] ]), content.locals && (module.exports = content.locals);
-        __webpack_require__(2)("2790b368", content, !1);
+        __webpack_require__(3)("2790b368", content, !1);
     }, function(module, exports, __webpack_require__) {
         var content = __webpack_require__(15);
         "string" == typeof content && (content = [ [ module.i, content, "" ] ]), content.locals && (module.exports = content.locals);
-        __webpack_require__(2)("02ec91af", content, !1);
+        __webpack_require__(3)("02ec91af", content, !1);
     }, function(module, exports) {
         module.exports = function(parentId, list) {
             for (var styles = [], newStyles = {}, i = 0; i < list.length; i++) {
@@ -40503,7 +40628,7 @@ if (false) {
 });
 
 /***/ }),
-/* 216 */
+/* 218 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -41113,13 +41238,13 @@ return index;
 
 
 /***/ }),
-/* 217 */
+/* 219 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function(global) {/**!
  * @fileOverview Kickass library to create and place poppers near their reference elements.
- * @version 1.14.3
+ * @version 1.14.4
  * @license
  * Copyright (c) 2016 Federico Zivolo and contributors
  *
@@ -41456,10 +41581,10 @@ function getBordersSize(styles, axis) {
 }
 
 function getSize(axis, body, html, computedStyle) {
-  return Math.max(body['offset' + axis], body['scroll' + axis], html['client' + axis], html['offset' + axis], html['scroll' + axis], isIE(10) ? html['offset' + axis] + computedStyle['margin' + (axis === 'Height' ? 'Top' : 'Left')] + computedStyle['margin' + (axis === 'Height' ? 'Bottom' : 'Right')] : 0);
+  return Math.max(body['offset' + axis], body['scroll' + axis], html['client' + axis], html['offset' + axis], html['scroll' + axis], isIE(10) ? parseInt(html['offset' + axis]) + parseInt(computedStyle['margin' + (axis === 'Height' ? 'Top' : 'Left')]) + parseInt(computedStyle['margin' + (axis === 'Height' ? 'Bottom' : 'Right')]) : 0);
 }
 
-function getWindowSizes() {
+function getWindowSizes(document) {
   var body = document.body;
   var html = document.documentElement;
   var computedStyle = isIE(10) && getComputedStyle(html);
@@ -41576,7 +41701,7 @@ function getBoundingClientRect(element) {
   };
 
   // subtract scrollbar size from sizes
-  var sizes = element.nodeName === 'HTML' ? getWindowSizes() : {};
+  var sizes = element.nodeName === 'HTML' ? getWindowSizes(element.ownerDocument) : {};
   var width = sizes.width || element.clientWidth || result.right - result.left;
   var height = sizes.height || element.clientHeight || result.bottom - result.top;
 
@@ -41611,7 +41736,7 @@ function getOffsetRectRelativeToArbitraryNode(children, parent) {
   var borderLeftWidth = parseFloat(styles.borderLeftWidth, 10);
 
   // In cases where the parent is fixed, we must ignore negative scroll in offset calc
-  if (fixedPosition && parent.nodeName === 'HTML') {
+  if (fixedPosition && isHTML) {
     parentRect.top = Math.max(parentRect.top, 0);
     parentRect.left = Math.max(parentRect.left, 0);
   }
@@ -41749,7 +41874,7 @@ function getBoundaries(popper, reference, padding, boundariesElement) {
 
     // In case of HTML, we need a different computation
     if (boundariesNode.nodeName === 'HTML' && !isFixed(offsetParent)) {
-      var _getWindowSizes = getWindowSizes(),
+      var _getWindowSizes = getWindowSizes(popper.ownerDocument),
           height = _getWindowSizes.height,
           width = _getWindowSizes.width;
 
@@ -41764,10 +41889,12 @@ function getBoundaries(popper, reference, padding, boundariesElement) {
   }
 
   // Add paddings
-  boundaries.left += padding;
-  boundaries.top += padding;
-  boundaries.right -= padding;
-  boundaries.bottom -= padding;
+  padding = padding || 0;
+  var isPaddingNumber = typeof padding === 'number';
+  boundaries.left += isPaddingNumber ? padding : padding.left || 0;
+  boundaries.top += isPaddingNumber ? padding : padding.top || 0;
+  boundaries.right -= isPaddingNumber ? padding : padding.right || 0;
+  boundaries.bottom -= isPaddingNumber ? padding : padding.bottom || 0;
 
   return boundaries;
 }
@@ -42092,7 +42219,7 @@ function getSupportedPropertyName(property) {
 }
 
 /**
- * Destroy the popper
+ * Destroys the popper.
  * @method
  * @memberof Popper
  */
@@ -42199,7 +42326,7 @@ function removeEventListeners(reference, state) {
 
 /**
  * It will remove resize/scroll events and won't recalculate popper position
- * when they are triggered. It also won't trigger onUpdate callback anymore,
+ * when they are triggered. It also won't trigger `onUpdate` callback anymore,
  * unless you call `update` method manually.
  * @method
  * @memberof Popper
@@ -42376,12 +42503,22 @@ function computeStyle(data, options) {
   var left = void 0,
       top = void 0;
   if (sideA === 'bottom') {
-    top = -offsetParentRect.height + offsets.bottom;
+    // when offsetParent is <html> the positioning is relative to the bottom of the screen (excluding the scrollbar)
+    // and not the bottom of the html element
+    if (offsetParent.nodeName === 'HTML') {
+      top = -offsetParent.clientHeight + offsets.bottom;
+    } else {
+      top = -offsetParentRect.height + offsets.bottom;
+    }
   } else {
     top = offsets.top;
   }
   if (sideB === 'right') {
-    left = -offsetParentRect.width + offsets.right;
+    if (offsetParent.nodeName === 'HTML') {
+      left = -offsetParent.clientWidth + offsets.right;
+    } else {
+      left = -offsetParentRect.width + offsets.right;
+    }
   } else {
     left = offsets.left;
   }
@@ -42490,7 +42627,7 @@ function arrow(data, options) {
 
   //
   // extends keepTogether behavior making sure the popper and its
-  // reference have enough pixels in conjuction
+  // reference have enough pixels in conjunction
   //
 
   // top/left side
@@ -42560,7 +42697,7 @@ function getOppositeVariation(variation) {
  * - `top-end` (on top of reference, right aligned)
  * - `right-start` (on right of reference, top aligned)
  * - `bottom` (on bottom, centered)
- * - `auto-right` (on the side with more space available, alignment depends by placement)
+ * - `auto-end` (on the side with more space available, alignment depends by placement)
  *
  * @static
  * @type {Array}
@@ -43102,7 +43239,7 @@ var modifiers = {
    * The `offset` modifier can shift your popper on both its axis.
    *
    * It accepts the following units:
-   * - `px` or unitless, interpreted as pixels
+   * - `px` or unit-less, interpreted as pixels
    * - `%` or `%r`, percentage relative to the length of the reference element
    * - `%p`, percentage relative to the length of the popper element
    * - `vw`, CSS viewport width unit
@@ -43110,7 +43247,7 @@ var modifiers = {
    *
    * For length is intended the main axis relative to the placement of the popper.<br />
    * This means that if the placement is `top` or `bottom`, the length will be the
-   * `width`. In case of `left` or `right`, it will be the height.
+   * `width`. In case of `left` or `right`, it will be the `height`.
    *
    * You can provide a single value (as `Number` or `String`), or a pair of values
    * as `String` divided by a comma or one (or more) white spaces.<br />
@@ -43131,7 +43268,7 @@ var modifiers = {
    * ```
    * > **NB**: If you desire to apply offsets to your poppers in a way that may make them overlap
    * > with their reference element, unfortunately, you will have to disable the `flip` modifier.
-   * > More on this [reading this issue](https://github.com/FezVrasta/popper.js/issues/373)
+   * > You can read more on this at this [issue](https://github.com/FezVrasta/popper.js/issues/373).
    *
    * @memberof modifiers
    * @inner
@@ -43152,7 +43289,7 @@ var modifiers = {
   /**
    * Modifier used to prevent the popper from being positioned outside the boundary.
    *
-   * An scenario exists where the reference itself is not within the boundaries.<br />
+   * A scenario exists where the reference itself is not within the boundaries.<br />
    * We can say it has "escaped the boundaries" — or just "escaped".<br />
    * In this case we need to decide whether the popper should either:
    *
@@ -43182,23 +43319,23 @@ var modifiers = {
     /**
      * @prop {number} padding=5
      * Amount of pixel used to define a minimum distance between the boundaries
-     * and the popper this makes sure the popper has always a little padding
+     * and the popper. This makes sure the popper always has a little padding
      * between the edges of its container
      */
     padding: 5,
     /**
      * @prop {String|HTMLElement} boundariesElement='scrollParent'
-     * Boundaries used by the modifier, can be `scrollParent`, `window`,
+     * Boundaries used by the modifier. Can be `scrollParent`, `window`,
      * `viewport` or any DOM element.
      */
     boundariesElement: 'scrollParent'
   },
 
   /**
-   * Modifier used to make sure the reference and its popper stay near eachothers
-   * without leaving any gap between the two. Expecially useful when the arrow is
-   * enabled and you want to assure it to point to its reference element.
-   * It cares only about the first axis, you can still have poppers with margin
+   * Modifier used to make sure the reference and its popper stay near each other
+   * without leaving any gap between the two. Especially useful when the arrow is
+   * enabled and you want to ensure that it points to its reference element.
+   * It cares only about the first axis. You can still have poppers with margin
    * between the popper and its reference element.
    * @memberof modifiers
    * @inner
@@ -43216,7 +43353,7 @@ var modifiers = {
    * This modifier is used to move the `arrowElement` of the popper to make
    * sure it is positioned between the reference element and its popper element.
    * It will read the outer size of the `arrowElement` node to detect how many
-   * pixels of conjuction are needed.
+   * pixels of conjunction are needed.
    *
    * It has no effect if no `arrowElement` is provided.
    * @memberof modifiers
@@ -43255,7 +43392,7 @@ var modifiers = {
      * @prop {String|Array} behavior='flip'
      * The behavior used to change the popper's placement. It can be one of
      * `flip`, `clockwise`, `counterclockwise` or an array with a list of valid
-     * placements (with optional variations).
+     * placements (with optional variations)
      */
     behavior: 'flip',
     /**
@@ -43265,9 +43402,9 @@ var modifiers = {
     padding: 5,
     /**
      * @prop {String|HTMLElement} boundariesElement='viewport'
-     * The element which will define the boundaries of the popper position,
-     * the popper will never be placed outside of the defined boundaries
-     * (except if keepTogether is enabled)
+     * The element which will define the boundaries of the popper position.
+     * The popper will never be placed outside of the defined boundaries
+     * (except if `keepTogether` is enabled)
      */
     boundariesElement: 'viewport'
   },
@@ -43331,8 +43468,8 @@ var modifiers = {
     fn: computeStyle,
     /**
      * @prop {Boolean} gpuAcceleration=true
-     * If true, it uses the CSS 3d transformation to position the popper.
-     * Otherwise, it will use the `top` and `left` properties.
+     * If true, it uses the CSS 3D transformation to position the popper.
+     * Otherwise, it will use the `top` and `left` properties
      */
     gpuAcceleration: true,
     /**
@@ -43359,7 +43496,7 @@ var modifiers = {
    * Note that if you disable this modifier, you must make sure the popper element
    * has its position set to `absolute` before Popper.js can do its work!
    *
-   * Just disable this modifier and define you own to achieve the desired effect.
+   * Just disable this modifier and define your own to achieve the desired effect.
    *
    * @memberof modifiers
    * @inner
@@ -43376,27 +43513,27 @@ var modifiers = {
     /**
      * @deprecated since version 1.10.0, the property moved to `computeStyle` modifier
      * @prop {Boolean} gpuAcceleration=true
-     * If true, it uses the CSS 3d transformation to position the popper.
-     * Otherwise, it will use the `top` and `left` properties.
+     * If true, it uses the CSS 3D transformation to position the popper.
+     * Otherwise, it will use the `top` and `left` properties
      */
     gpuAcceleration: undefined
   }
 };
 
 /**
- * The `dataObject` is an object containing all the informations used by Popper.js
- * this object get passed to modifiers and to the `onCreate` and `onUpdate` callbacks.
+ * The `dataObject` is an object containing all the information used by Popper.js.
+ * This object is passed to modifiers and to the `onCreate` and `onUpdate` callbacks.
  * @name dataObject
  * @property {Object} data.instance The Popper.js instance
  * @property {String} data.placement Placement applied to popper
  * @property {String} data.originalPlacement Placement originally defined on init
  * @property {Boolean} data.flipped True if popper has been flipped by flip modifier
- * @property {Boolean} data.hide True if the reference element is out of boundaries, useful to know when to hide the popper.
+ * @property {Boolean} data.hide True if the reference element is out of boundaries, useful to know when to hide the popper
  * @property {HTMLElement} data.arrowElement Node used as arrow by arrow modifier
- * @property {Object} data.styles Any CSS property defined here will be applied to the popper, it expects the JavaScript nomenclature (eg. `marginBottom`)
- * @property {Object} data.arrowStyles Any CSS property defined here will be applied to the popper arrow, it expects the JavaScript nomenclature (eg. `marginBottom`)
+ * @property {Object} data.styles Any CSS property defined here will be applied to the popper. It expects the JavaScript nomenclature (eg. `marginBottom`)
+ * @property {Object} data.arrowStyles Any CSS property defined here will be applied to the popper arrow. It expects the JavaScript nomenclature (eg. `marginBottom`)
  * @property {Object} data.boundaries Offsets of the popper boundaries
- * @property {Object} data.offsets The measurements of popper, reference and arrow elements.
+ * @property {Object} data.offsets The measurements of popper, reference and arrow elements
  * @property {Object} data.offsets.popper `top`, `left`, `width`, `height` values
  * @property {Object} data.offsets.reference `top`, `left`, `width`, `height` values
  * @property {Object} data.offsets.arrow] `top` and `left` offsets, only one of them will be different from 0
@@ -43404,9 +43541,9 @@ var modifiers = {
 
 /**
  * Default options provided to Popper.js constructor.<br />
- * These can be overriden using the `options` argument of Popper.js.<br />
- * To override an option, simply pass as 3rd argument an object with the same
- * structure of this object, example:
+ * These can be overridden using the `options` argument of Popper.js.<br />
+ * To override an option, simply pass an object with the same
+ * structure of the `options` object, as the 3rd argument. For example:
  * ```
  * new Popper(ref, pop, {
  *   modifiers: {
@@ -43420,7 +43557,7 @@ var modifiers = {
  */
 var Defaults = {
   /**
-   * Popper's placement
+   * Popper's placement.
    * @prop {Popper.placements} placement='bottom'
    */
   placement: 'bottom',
@@ -43432,7 +43569,7 @@ var Defaults = {
   positionFixed: false,
 
   /**
-   * Whether events (resize, scroll) are initially enabled
+   * Whether events (resize, scroll) are initially enabled.
    * @prop {Boolean} eventsEnabled=true
    */
   eventsEnabled: true,
@@ -43446,17 +43583,17 @@ var Defaults = {
 
   /**
    * Callback called when the popper is created.<br />
-   * By default, is set to no-op.<br />
+   * By default, it is set to no-op.<br />
    * Access Popper.js instance with `data.instance`.
    * @prop {onCreate}
    */
   onCreate: function onCreate() {},
 
   /**
-   * Callback called when the popper is updated, this callback is not called
+   * Callback called when the popper is updated. This callback is not called
    * on the initialization/creation of the popper, but only on subsequent
    * updates.<br />
-   * By default, is set to no-op.<br />
+   * By default, it is set to no-op.<br />
    * Access Popper.js instance with `data.instance`.
    * @prop {onUpdate}
    */
@@ -43464,7 +43601,7 @@ var Defaults = {
 
   /**
    * List of modifiers used to modify the offsets before they are applied to the popper.
-   * They provide most of the functionalities of Popper.js
+   * They provide most of the functionalities of Popper.js.
    * @prop {modifiers}
    */
   modifiers: modifiers
@@ -43484,10 +43621,10 @@ var Defaults = {
 // Methods
 var Popper = function () {
   /**
-   * Create a new Popper.js instance
+   * Creates a new Popper.js instance.
    * @class Popper
    * @param {HTMLElement|referenceObject} reference - The reference element used to position the popper
-   * @param {HTMLElement} popper - The HTML element used as popper.
+   * @param {HTMLElement} popper - The HTML element used as the popper
    * @param {Object} options - Your custom options to override the ones defined in [Defaults](#defaults)
    * @return {Object} instance - The generated Popper.js instance
    */
@@ -43583,7 +43720,7 @@ var Popper = function () {
     }
 
     /**
-     * Schedule an update, it will run on the next UI update available
+     * Schedules an update. It will run on the next UI update available.
      * @method scheduleUpdate
      * @memberof Popper
      */
@@ -43620,7 +43757,7 @@ var Popper = function () {
  * new Popper(referenceObject, popperNode);
  * ```
  *
- * NB: This feature isn't supported in Internet Explorer 10
+ * NB: This feature isn't supported in Internet Explorer 10.
  * @name referenceObject
  * @property {Function} data.getBoundingClientRect
  * A function that returns a set of coordinates compatible with the native `getBoundingClientRect` method.
@@ -43641,15 +43778,15 @@ Popper.Defaults = Defaults;
 /* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(5)))
 
 /***/ }),
-/* 218 */
+/* 220 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(2)
 /* script */
-var __vue_script__ = __webpack_require__(219)
+var __vue_script__ = __webpack_require__(221)
 /* template */
-var __vue_template__ = __webpack_require__(220)
+var __vue_template__ = __webpack_require__(222)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -43666,7 +43803,7 @@ var Component = normalizeComponent(
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "resources\\assets\\js\\components\\SeriesDropdown.vue"
+Component.options.__file = "resources/assets/js/components/SeriesDropdown.vue"
 
 /* hot reload */
 if (false) {(function () {
@@ -43675,9 +43812,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-6ed0aedf", Component.options)
+    hotAPI.createRecord("data-v-8b581cc2", Component.options)
   } else {
-    hotAPI.reload("data-v-6ed0aedf", Component.options)
+    hotAPI.reload("data-v-8b581cc2", Component.options)
   }
   module.hot.dispose(function (data) {
     disposed = true
@@ -43688,7 +43825,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 219 */
+/* 221 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -43734,7 +43871,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 220 */
+/* 222 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -43798,20 +43935,20 @@ module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-6ed0aedf", module.exports)
+    require("vue-hot-reload-api")      .rerender("data-v-8b581cc2", module.exports)
   }
 }
 
 /***/ }),
-/* 221 */
+/* 223 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(2)
 /* script */
-var __vue_script__ = __webpack_require__(222)
+var __vue_script__ = __webpack_require__(224)
 /* template */
-var __vue_template__ = __webpack_require__(223)
+var __vue_template__ = __webpack_require__(225)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -43828,7 +43965,7 @@ var Component = normalizeComponent(
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "resources\\assets\\js\\components\\SupportButton.vue"
+Component.options.__file = "resources/assets/js/components/SupportButton.vue"
 
 /* hot reload */
 if (false) {(function () {
@@ -43837,9 +43974,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-216b357a", Component.options)
+    hotAPI.createRecord("data-v-0b149aba", Component.options)
   } else {
-    hotAPI.reload("data-v-216b357a", Component.options)
+    hotAPI.reload("data-v-0b149aba", Component.options)
   }
   module.hot.dispose(function (data) {
     disposed = true
@@ -43850,7 +43987,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 222 */
+/* 224 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -44005,7 +44142,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 223 */
+/* 225 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -44270,20 +44407,20 @@ module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-216b357a", module.exports)
+    require("vue-hot-reload-api")      .rerender("data-v-0b149aba", module.exports)
   }
 }
 
 /***/ }),
-/* 224 */
+/* 226 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(2)
 /* script */
-var __vue_script__ = __webpack_require__(225)
+var __vue_script__ = __webpack_require__(227)
 /* template */
-var __vue_template__ = __webpack_require__(227)
+var __vue_template__ = __webpack_require__(229)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -44300,7 +44437,7 @@ var Component = normalizeComponent(
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "resources\\assets\\js\\components\\Breadcrumb.vue"
+Component.options.__file = "resources/assets/js/components/Breadcrumb.vue"
 
 /* hot reload */
 if (false) {(function () {
@@ -44309,9 +44446,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-8167bd8c", Component.options)
+    hotAPI.createRecord("data-v-2342780c", Component.options)
   } else {
-    hotAPI.reload("data-v-8167bd8c", Component.options)
+    hotAPI.reload("data-v-2342780c", Component.options)
   }
   module.hot.dispose(function (data) {
     disposed = true
@@ -44322,12 +44459,12 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 225 */
+/* 227 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_lodash__ = __webpack_require__(226);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_lodash__ = __webpack_require__(228);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_lodash___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_lodash__);
 //
 //
@@ -44360,7 +44497,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 226 */
+/* 228 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global, module) {var __WEBPACK_AMD_DEFINE_RESULT__;/**
@@ -44377,7 +44514,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
   var undefined;
 
   /** Used as the semantic version number. */
-  var VERSION = '4.17.10';
+  var VERSION = '4.17.11';
 
   /** Used as the size to enable large array optimizations. */
   var LARGE_ARRAY_SIZE = 200;
@@ -44641,7 +44778,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
   var reHasUnicode = RegExp('[' + rsZWJ + rsAstralRange  + rsComboRange + rsVarRange + ']');
 
   /** Used to detect strings that need a more robust regexp to match words. */
-  var reHasUnicodeWord = /[a-z][A-Z]|[A-Z]{2,}[a-z]|[0-9][a-zA-Z]|[a-zA-Z][0-9]|[^a-zA-Z0-9 ]/;
+  var reHasUnicodeWord = /[a-z][A-Z]|[A-Z]{2}[a-z]|[0-9][a-zA-Z]|[a-zA-Z][0-9]|[^a-zA-Z0-9 ]/;
 
   /** Used to assign default `context` object properties. */
   var contextProps = [
@@ -45587,20 +45724,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       }
     }
     return result;
-  }
-
-  /**
-   * Gets the value at `key`, unless `key` is "__proto__".
-   *
-   * @private
-   * @param {Object} object The object to query.
-   * @param {string} key The key of the property to get.
-   * @returns {*} Returns the property value.
-   */
-  function safeGet(object, key) {
-    return key == '__proto__'
-      ? undefined
-      : object[key];
   }
 
   /**
@@ -48060,7 +48183,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
           if (isArguments(objValue)) {
             newValue = toPlainObject(objValue);
           }
-          else if (!isObject(objValue) || (srcIndex && isFunction(objValue))) {
+          else if (!isObject(objValue) || isFunction(objValue)) {
             newValue = initCloneObject(srcValue);
           }
         }
@@ -50981,6 +51104,22 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         array[length] = isIndex(index, arrLength) ? oldArray[index] : undefined;
       }
       return array;
+    }
+
+    /**
+     * Gets the value at `key`, unless `key` is "__proto__".
+     *
+     * @private
+     * @param {Object} object The object to query.
+     * @param {string} key The key of the property to get.
+     * @returns {*} Returns the property value.
+     */
+    function safeGet(object, key) {
+      if (key == '__proto__') {
+        return;
+      }
+
+      return object[key];
     }
 
     /**
@@ -61473,7 +61612,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5), __webpack_require__(16)(module)))
 
 /***/ }),
-/* 227 */
+/* 229 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -61488,20 +61627,20 @@ module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-8167bd8c", module.exports)
+    require("vue-hot-reload-api")      .rerender("data-v-2342780c", module.exports)
   }
 }
 
 /***/ }),
-/* 228 */
+/* 230 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(2)
 /* script */
-var __vue_script__ = __webpack_require__(229)
+var __vue_script__ = __webpack_require__(231)
 /* template */
-var __vue_template__ = __webpack_require__(230)
+var __vue_template__ = __webpack_require__(232)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -61518,7 +61657,7 @@ var Component = normalizeComponent(
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "resources\\assets\\js\\components\\Tooltip.vue"
+Component.options.__file = "resources/assets/js/components/Tooltip.vue"
 
 /* hot reload */
 if (false) {(function () {
@@ -61527,9 +61666,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-4a4ddd5c", Component.options)
+    hotAPI.createRecord("data-v-733c329c", Component.options)
   } else {
-    hotAPI.reload("data-v-4a4ddd5c", Component.options)
+    hotAPI.reload("data-v-733c329c", Component.options)
   }
   module.hot.dispose(function (data) {
     disposed = true
@@ -61540,7 +61679,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 229 */
+/* 231 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -61587,7 +61726,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 230 */
+/* 232 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -61611,96 +61750,15 @@ module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-4a4ddd5c", module.exports)
+    require("vue-hot-reload-api")      .rerender("data-v-733c329c", module.exports)
   }
 }
 
 /***/ }),
-/* 231 */
+/* 233 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 232 */,
-/* 233 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__(2)
-/* script */
-var __vue_script__ = __webpack_require__(234)
-/* template */
-var __vue_template__ = null
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources\\assets\\js\\components\\Render.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-25e3ce66", Component.options)
-  } else {
-    hotAPI.reload("data-v-25e3ce66", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 234 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    /* render(createElement) {
-        return createElement('h1', 'Hello World');
-    } */
-
-    /* render(h) {
-        return h('h1', 'Hello World');
-    } */
-
-    // h refers to hyperscript
-    /*  render:h => h('h1', 'Hello World') */
-
-    data: function data() {
-        return {
-            name: 'John Doe'
-        };
-    },
-    render: function render(element) {
-        // nest structure
-        return element('div', { attrs: { id: 'foobar' } }, [element('h1', { class: 'title' }, this.name), element('h2', { class: 'subtitle' }, this.name)]);
-
-        // api just like v-bind :class, so we can add an array here ['one','two']
-        /* return element('h1', { class: 'title' }, this.name); */
-    }
-});
 
 /***/ })
 /******/ ]);

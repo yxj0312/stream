@@ -1,4 +1,4 @@
-## Learn Vue 2: Step By Step
+## [Learn Vue 2: Step By Step](https://laracasts.com/series/learn-vue-2-step-by-step)
 
 Vue is easily one of the most exciting additions to the front-end world in many years. With its intuitive API, and the fact that it can be applied to any type of application, it's no wonder why folks have gravitated to it as much as they have.
 
