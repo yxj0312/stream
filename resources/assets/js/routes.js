@@ -20,6 +20,11 @@ let routes = [
         path: '/series',
         component: require('./views/Series')
     },
+
+    {
+        path: '/scroll',
+        component: require('./views/Scroll')
+    },
 ];
 
 export default new VueRouter({

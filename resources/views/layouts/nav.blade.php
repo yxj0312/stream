@@ -15,6 +15,10 @@
 
             <series-dropdown></series-dropdown>
             <li><support-button></support-button></li>
+
+            <router-link tag="li" to="/scroll">
+                <a>Scroll</a>
+            </router-link>
         </ul>
     </div>
 </nav>

@@ -35163,6 +35163,9 @@ var routes = [{
 }, {
     path: '/series',
     component: __webpack_require__(208)
+}, {
+    path: '/scroll',
+    component: __webpack_require__(235)
 }];
 
 /* harmony default export */ __webpack_exports__["a"] = (new __WEBPACK_IMPORTED_MODULE_0_vue_router__["a" /* default */]({
@@ -61759,6 +61762,180 @@ if (false) {
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 234 */,
+/* 235 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(2)
+/* script */
+var __vue_script__ = __webpack_require__(236)
+/* template */
+var __vue_template__ = __webpack_require__(237)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/views/Scroll.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-c07b0840", Component.options)
+  } else {
+    hotAPI.reload("data-v-c07b0840", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 236 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_lodash__ = __webpack_require__(228);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_lodash___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_lodash__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: [],
+
+    components: {},
+
+    data: function data() {
+        return {
+            page: 0
+        };
+    },
+    mounted: function mounted() {
+        window.addEventListener('scroll', this.loadMoreResults);
+    },
+
+
+    computed: {},
+
+    methods: {
+        loadMoreResults: Object(__WEBPACK_IMPORTED_MODULE_0_lodash__["throttle"])(function (e) {
+            if (this.shouldLoadMoreResults()) {
+                this.page++;
+            }
+        }, 300),
+
+        shouldLoadMoreResults: function shouldLoadMoreResults() {
+            // This is wrong
+            var heightOfResults = '.ais-results'.height();
+
+            var resultsDistanceFromWindowTop = '.ais-results'.offset().top;
+
+            return window.pageYOffset >= (resultsDistanceFromWindowTop + heightOfResults) * 0.7;
+        }
+    }
+});
+
+/***/ }),
+/* 237 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _vm._m(0)
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "ais-results" }, [
+      _c("div", [_vm._v("123")]),
+      _vm._v(" "),
+      _c("div", [_vm._v("123")]),
+      _vm._v(" "),
+      _c("div", [_vm._v("123")]),
+      _vm._v(" "),
+      _c("div", [_vm._v("123")]),
+      _vm._v(" "),
+      _c("div", [_vm._v("123")]),
+      _vm._v(" "),
+      _c("div", [_vm._v("123")]),
+      _vm._v(" "),
+      _c("div", [_vm._v("123")]),
+      _vm._v(" "),
+      _c("div", [_vm._v("123")]),
+      _vm._v(" "),
+      _c("div", [_vm._v("123")]),
+      _vm._v(" "),
+      _c("div", [_vm._v("123")]),
+      _vm._v(" "),
+      _c("div", [_vm._v("123")]),
+      _vm._v(" "),
+      _c("div", [_vm._v("123")]),
+      _vm._v(" "),
+      _c("div", [_vm._v("123")]),
+      _vm._v(" "),
+      _c("div", [_vm._v("123")]),
+      _vm._v(" "),
+      _c("div", [_vm._v("123")]),
+      _vm._v(" "),
+      _c("div", [_vm._v("123")])
+    ])
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-c07b0840", module.exports)
+  }
+}
 
 /***/ })
 /******/ ]);
