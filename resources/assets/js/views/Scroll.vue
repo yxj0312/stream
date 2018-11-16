@@ -42,7 +42,7 @@
         },
 
         methods: {
-            loadMoreResults: throttle(function(e) {
+            loadMoreResults: throttle(function() {
                 if (this.shouldLoadMoreResults()) {
                   this.page++;  
                 }

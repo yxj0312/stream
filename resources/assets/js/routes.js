@@ -25,6 +25,11 @@ let routes = [
         path: '/scroll',
         component: require('./views/Scroll')
     },
+
+    {
+        path: '/count',
+        component: require('./views/Count')
+    },
 ];
 
 export default new VueRouter({

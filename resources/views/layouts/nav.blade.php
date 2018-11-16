@@ -19,6 +19,10 @@
             <router-link tag="li" to="/scroll">
                 <a>Scroll</a>
             </router-link>
+            
+            <router-link tag="li" to="/Count">
+                <a>Count</a>
+            </router-link>
         </ul>
     </div>
 </nav>
