@@ -30,6 +30,11 @@ let routes = [
         path: '/count',
         component: require('./views/Count')
     },
+
+    {
+        path: '/conditional',
+        component: require('./views/ConditionalElement')
+    },
 ];
 
 export default new VueRouter({

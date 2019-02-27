@@ -23,6 +23,9 @@
             <router-link tag="li" to="/Count">
                 <a>Count</a>
             </router-link>
+            <router-link tag="li" to="/conditional">
+                <a>ConditionalElement</a>
+            </router-link>
         </ul>
     </div>
 </nav>
