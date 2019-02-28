@@ -58857,7 +58857,7 @@ var render = function() {
           "bg-blue hover:bg-blue-dark rounded-full w-16 h-16 text-center flex items-center justify-center\n        shadow-lg",
         on: {
           click: function($event) {
-            return _vm.console.log("123")
+            return _vm.$modal.show("add-reply-modal")
           }
         }
       },
