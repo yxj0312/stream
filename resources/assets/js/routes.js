@@ -33,7 +33,7 @@ let routes = [
 
     {
         path: '/conditional',
-        component: require('./views/ConditionalElement')
+        component: require('./views/ConditionalElementPage')
     },
 ];
 

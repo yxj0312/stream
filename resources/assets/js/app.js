@@ -10,6 +10,7 @@ Vue.component("series-dropdown", require("./components/SeriesDropdown.vue"));
 Vue.component("support-button", require("./components/SupportButton.vue"));
 Vue.component("breadcrumb", require("./components/Breadcrumb.vue"))
 Vue.component("tooltip", require("./components/Tooltip.vue"));
+Vue.component("conditional-element", require("./components/CondtionalElement.vue"));
 
 
 
