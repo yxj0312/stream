@@ -15,11 +15,11 @@
         </div>
         <div id="navbarMenuHeroA" class="navbar-menu">
           <div class="navbar-end">
-            <a class="navbar-item is-active">
+            <a class="navbar-item is-active" href="/">
               Home
             </a>
-            <a class="navbar-item">
-              Examples
+            <a class="navbar-item" href="/video">
+              Video
             </a>
             <a class="navbar-item">
               Documentation

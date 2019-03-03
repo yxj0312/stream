@@ -25,4 +25,6 @@ If you'd like to jump on board, let me show you, step by step, exactly what you 
 - Ep 40: two ways Reusability: Accordion Collection and accordion single component
 - Ep 41: 2nd way to Reusability: [use a data-driven approach](https://gist.github.com/laracasts/3a5f0a288fbd3cc9332a9d8f80708d0e)
 
+- [HTML5 Video](https://laracasts.com/series/how-to-use-html5-video-and-videojs/)
+
  
