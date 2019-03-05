@@ -20,7 +20,31 @@
     </div>
 
     <script src="./js/app.js"></script>
-    {{-- <script src='https://vjs.zencdn.net/7.4.1/video.js'></script> --}}
+    <script src='https://vjs.zencdn.net/7.4.1/video.js'></script>
 </body>
+
+<script>
+    var video = videojs('my-video');
+
+    // video.ready(function () {
+    //     var speed = prompt("How fast should we go?");
+
+    //     this.playbackRate(speed)
+
+    //     setTimeout(() => { this.play(); },1000);
+
+    //     // setTimeout(() => { 
+    //     //     this.play(); 
+    //     // }, 3000); 
+    // });
+
+    video.on('pause', function(){
+        alert('You have' + this.remainingTime() + 'seconds left to watch');
+    });
+    
+    // video.on('ended', function(){
+    //     alert('The video has ended');
+    // });
+</script>
 
 </html>

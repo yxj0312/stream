@@ -1,9 +1,9 @@
 import './bootstrap';
+// import './_video.js';
 import router from './routes';
 import VModal from 'vue-js-modal';
 import PortalVue from 'portal-vue';
 import PopperTooltip from 'tooltip.js';
-import 'video.js';
 
 Vue.use(PortalVue)
 Vue.use(VModal)
