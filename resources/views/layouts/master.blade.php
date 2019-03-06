@@ -21,10 +21,25 @@
 
     <script src="./js/app.js"></script>
     <script src='https://vjs.zencdn.net/7.4.1/video.js'></script>
+    <script src="//cdn.sc.gl/videojs-hotkeys/0.2/videojs.hotkeys.min.js"></script>
 </body>
 
 <script>
-    var video = videojs('my-video');
+    var video = videojs('my-video', {
+        playbackRates: [.5, 1, 1.5, 2, 2.5],
+        fluid: true
+    });
+    // var video = videojs('my-video', {
+    //     // options:
+    //     preload: 'auto',
+    //     playbackRates: [.5, 1, 1.5, 2, 2.5]
+    //     plugins: {
+    //         hotkeys: {
+    //             seekStep: 10,
+    //             enableNumbers: false
+    //         }
+    //     }
+    // });
 
     // video.ready(function () {
     //     var speed = prompt("How fast should we go?");
@@ -38,13 +53,21 @@
     //     // }, 3000); 
     // });
 
-    video.on('pause', function(){
-        alert('You have' + this.remainingTime() + 'seconds left to watch');
-    });
+    // video.on('pause', function(){
+    //     alert('You have' + this.remainingTime() + 'seconds left to watch');
+    // });
     
     // video.on('ended', function(){
     //     alert('The video has ended');
     // });
+
+
+    video.ready(function (){
+        this.hotkeys({
+            seekStep: 10,
+            enableNumbers: false
+        });
+    })
 </script>
 
 </html>
