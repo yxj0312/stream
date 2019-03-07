@@ -10,6 +10,7 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
+Auth::loginUsingId(1);
 
 Route::get('/', function () {
     return view('welcome');
@@ -28,3 +29,5 @@ Route::post('/contact','ContactController@store');
 Route::get('/video', function() {
     return view('video');
 });
+
+Route::post('completions', 'CompletionsController@store');

@@ -31,4 +31,14 @@ class User extends Authenticatable
     {
         return $this->hasMany(Status::class);
     }
+
+    public function completions()
+    {
+        return $this->belongsToMany(Video::class, 'completions')->withTimestamps();
+    }
+
+    public function complete(Video $video)
+    {
+        $this->completions()->attach($video);
+    }
 }

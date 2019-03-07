@@ -8,6 +8,7 @@
     {{-- <link href="https://vjs.zencdn.net/7.4.1/video-js.css" rel="stylesheet"> --}}
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.min.css">
     <link rel="stylesheet" type="text/css" href="/css/app.css">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>My App</title>
 </head>
@@ -19,9 +20,10 @@
         @yield('content')
     </div>
 
-    <script src="./js/app.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src='https://vjs.zencdn.net/7.4.1/video.js'></script>
     <script src="//cdn.sc.gl/videojs-hotkeys/0.2/videojs.hotkeys.min.js"></script>
+    <script src="./js/app.js"></script>
 </body>
 
 <script>
@@ -57,9 +59,16 @@
     //     alert('You have' + this.remainingTime() + 'seconds left to watch');
     // });
     
-    // video.on('ended', function(){
-    //     alert('The video has ended');
-    // });
+    video.on('ended', function(){
+        $.ajax({
+            type: 'POST',
+            url: '/completions',
+            headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+            // data: { videoId: $('video').data('video-id') }
+            data: { videoId: 1 }
+        })
+        // alert('The video has ended');
+    });
 
 
     video.ready(function (){
