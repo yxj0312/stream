@@ -31,3 +31,19 @@ Route::get('/video', function() {
 });
 
 Route::post('completions', 'CompletionsController@store');
+
+
+// Route for 'How do I' Ep 11 - How Do I Dry Up My Forms
+
+use App\Post;
+
+Route::get('/posts', function() {
+    $posts = Post::latest()->get();
+
+    return view('posts.index', compact('posts'));
+});
+
+
+Route::get('/posts/{post}', function(Post $post) {
+    return view('posts.show', compact('posts'));
+}); 
