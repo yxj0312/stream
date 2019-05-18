@@ -37,13 +37,4 @@ Route::post('completions', 'CompletionsController@store');
 
 use App\Post;
 
-Route::get('/posts', function() {
-    $posts = Post::latest()->get();
-
-    return view('posts.index', compact('posts'));
-});
-
-
-Route::get('/posts/{post}', function(Post $post) {
-    return view('posts.show', compact('posts'));
-}); 
+Route::resource('posts', 'PostsController');
