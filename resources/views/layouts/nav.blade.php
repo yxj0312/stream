@@ -26,6 +26,9 @@
             <router-link tag="li" to="/conditional">
                 <a>ConditionalElement</a>
             </router-link>
+            <router-link tag="li" to="/plan">
+                <a>PlanCards</a>
+            </router-link>
         </ul>
     </div>
 </nav>

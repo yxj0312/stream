@@ -35,6 +35,11 @@ let routes = [
         path: '/conditional',
         component: require('./views/ConditionalElementPage')
     },
+
+    {
+        path: '/plan',
+        component: require('./views/Plan')
+    },
 ];
 
 export default new VueRouter({
