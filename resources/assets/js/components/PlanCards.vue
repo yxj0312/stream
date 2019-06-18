@@ -8,8 +8,17 @@
                         <div class="">
                             <button
                                 class="block w-full font-bold h-full text-white text-xs uppercase"
+                                @click="changeCategory('personalPlans')"
                             >
                                 Personal
+                            </button>
+                        </div>
+                        <div class="">
+                            <button
+                                class="block w-full font-bold h-full text-white text-xs uppercase"
+                                @click="changeCategory('teamPlans')"
+                            >
+                                Teams
                             </button>
                         </div>
                     </div>
@@ -37,8 +46,24 @@
             
         },
 
+        watch: {
+            category(newCategory) {
+                this.$emit('category-changed', newCategory); 
+            }
+        },
+
         methods: {
-            
+            changeCategory(category) {
+                this.category = category;
+
+                this.$emit('change-category', category);
+            },
+
+            onClick(chosenPlan) {
+                if (chosenPlan === 'Teams') {
+                    this.category = 'teamPlans';
+                }
+            }
         }
     }
 </script>
