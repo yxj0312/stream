@@ -13,6 +13,12 @@
                     </h1>
                 </div>
             </template>
+
+            <template v-slot:plans-after="{ category }">
+                <div slot="plans-after" class="py-4">
+                    
+               </div>
+            </template>
     </div>
 </template>
 
