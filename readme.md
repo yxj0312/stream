@@ -26,6 +26,6 @@ If you'd like to jump on board, let me show you, step by step, exactly what you 
 - Ep 41: 2nd way to Reusability: [use a data-driven approach](https://gist.github.com/laracasts/3a5f0a288fbd3cc9332a9d8f80708d0e)
 
 - [HTML5 Video](https://laracasts.com/series/how-to-use-html5-video-and-videojs/)
-- Ep 49: Two-Way Databinding Review
+- Ep 49: [Two-Way Databinding Review](https://github.com/yxj0312/stream/blob/master/doc/Ep49.md)
 
  
