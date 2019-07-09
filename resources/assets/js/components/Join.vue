@@ -34,12 +34,22 @@
             }
         },
 
+        watch: {
+            category(newCategory) {
+                this.$emit('category-changed', newCategory);
+            }
+        },
+
         computed: {
             
         },
 
         methods: {
-            
+            changeCategory(category) {
+                this.category = category;
+
+                this.$emit('change-category', category);
+            }
         }
     }
 </script>
